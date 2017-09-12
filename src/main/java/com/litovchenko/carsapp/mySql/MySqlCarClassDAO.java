@@ -26,7 +26,7 @@ public class MySqlCarClassDAO extends MySqlGenericDAO<CarClass> implements CarCl
         SQL_SELECT_ALL_QUERY = "SELECT * FROM " + CAR_CLASSES;
         SQL_UPDATE_QUERY = "UPDATE " + CAR_CLASSES + " SET " + CAR_CLASS_NAME + " = ? WHERE " + ID + EQ_PARAM;
         SQL_INSERT_QUERY = "INSERT INTO " + CAR_CLASSES + "(" + ID + ", " + CAR_CLASS_NAME + ") VALUES (DEFAULT, ?)";
-        SQL_DELETE_QUERY = "DELETE FROM " + CAR_CLASSES + "WHERE " + ID + EQ_PARAM;
+        SQL_DELETE_QUERY = "DELETE FROM " + CAR_CLASSES + " WHERE " + ID + EQ_PARAM;
     }
 
     public MySqlCarClassDAO(Connection con) {
@@ -64,7 +64,6 @@ public class MySqlCarClassDAO extends MySqlGenericDAO<CarClass> implements CarCl
         try{
             while(rs.next()){
                 CarClass cc = new CarClass(rs.getInt(ID), rs.getString(CAR_CLASS_NAME));
-
                 list.add(cc);
             }
         } catch (SQLException e){
@@ -98,7 +97,7 @@ public class MySqlCarClassDAO extends MySqlGenericDAO<CarClass> implements CarCl
 
     @Override
     public boolean removeByClassName(String class_name) {
-        String sql = "DELETE FROM " + CAR_CLASSES + "WHERE " + CAR_CLASS_NAME + "LIKE ?";
+        String sql = "DELETE FROM " + CAR_CLASSES + " WHERE " + CAR_CLASS_NAME + " LIKE ?";
         try(PreparedStatement pstm = con.prepareStatement(sql)){
             pstm.setString(1, class_name);
             pstm.executeUpdate();

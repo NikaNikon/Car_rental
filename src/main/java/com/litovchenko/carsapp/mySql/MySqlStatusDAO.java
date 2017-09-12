@@ -89,7 +89,7 @@ public class MySqlStatusDAO extends MySqlGenericDAO<Status> implements StatusDAO
     @Override
     protected void prepareStatementForInsert(PreparedStatement st, Status object) {
         try {
-            st.setString(2, object.getStatus());
+            st.setString(1, object.getStatus());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }

@@ -130,7 +130,7 @@ public class Car implements Identified {
             car.append("Class: " + carClassName + line_sep);
         }
         if (description != null) {
-            car.append(description);
+            car.append(description + line_sep);
         }
         car.append("Price: " + price + " per day" + line_sep).
                 append("Driver price: " + driverPrice + " per day" + line_sep);

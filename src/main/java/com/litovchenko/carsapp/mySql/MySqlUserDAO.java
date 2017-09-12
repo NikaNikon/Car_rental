@@ -1,6 +1,7 @@
 package com.litovchenko.carsapp.mySql;
 
 import com.litovchenko.carsapp.dao.UserDAO;
+import com.litovchenko.carsapp.model.Role;
 import com.litovchenko.carsapp.model.User;
 
 import javax.persistence.PersistenceException;
@@ -40,18 +41,22 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
     @Override
     public User getByLogin(String login, String password) {
         User user = null;
-        String sql = SELECT_BY_TEMPLATE + " WHERE " + LOGIN + EQ_PARAM + " AND " + PASSWORD + EQ_PARAM;
+        String sql = SELECT_BY_TEMPLATE + LOGIN + " LIKE ?" + " AND " + PASSWORD + " LIKE ? ";
         try (PreparedStatement pstm = con.prepareStatement(sql)) {
             pstm.setString(1, login);
             pstm.setString(2, password);
             ResultSet rs = pstm.executeQuery();
-            if (rs.next()) {
+            List<User> list = parseResultSet(rs);
+            if(list!=null){
+                user = list.get(0);
+            }
+            /*if (rs.next()) {
                 MySqlPassportDataDAO passportDataDAO = new MySqlPassportDataDAO(con);
                 //get role dao here
                 user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
                         rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
                 user.setPassportData(passportDataDAO.getByUserLogin(login));
-            }
+            }*/
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -62,7 +67,7 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
     public List<User> getByRole(String role) {
         List<User> list;
         String sql = SQL_SELECT_ALL_QUERY + COMA + ROLES + " WHERE " + ROLES + "." + ID + " = " + USER_ROLE_ID +
-                " AND " + ROLE_NAME + " LIKE " + EQ_PARAM;
+                " AND " + ROLE_NAME + " LIKE ?";
         list = getByStringParam(sql, role);
         return list;
     }
@@ -116,7 +121,11 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
                 User user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
                         rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
                 user.setPassportData(passportDataDAO.getById(rs.getInt(ID)));
-                user.setRole(roleDAO.getById(rs.getInt(USER_ROLE_ID)).getRoleName());
+                Role role = roleDAO.getById(rs.getInt(USER_ROLE_ID));
+                if(role!=null) {
+                    user.setRole(role.getRoleName());
+                }
+                list.add(user);
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);
@@ -124,7 +133,7 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
         if (list.isEmpty()) {
             return null;
         }
-        return null;
+        return list;
     }
 
     @Override

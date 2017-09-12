@@ -2,12 +2,14 @@ package com.litovchenko.carsapp.model;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static com.litovchenko.carsapp.model.Constants.USERS;
 import static com.litovchenko.carsapp.model.Constants.USER_ROLE_ID;
 
 @Entity
 @Table(name = USERS)
-public class User implements Identified {
+public class User implements Identified, Serializable {
 
     @Id
     @GeneratedValue

@@ -20,7 +20,7 @@
   <display-name>Car_rental</display-name>
 
   <welcome-file-list>
-    <welcome-file>Main</welcome-file>
+    <welcome-file>MainPageServlet</welcome-file>
   </welcome-file-list>
   
 </web-app>

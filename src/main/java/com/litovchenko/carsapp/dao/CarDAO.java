@@ -18,6 +18,8 @@ public interface CarDAO  extends GenericDAO<Car>{
 
     List<Car> getByStatus(Car.Status status);
 
+    List<String> getModels();
+
     boolean deleteAllByClass(String car_class);
 
 }

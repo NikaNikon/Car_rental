@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `roleId` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `login` VARCHAR(20) NOT NULL,
-  `password` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
   `email` VARCHAR(50) NOT NULL,
   `blocked` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `orderDate` DATE NOT NULL,
   `driver` BINARY(1) NOT NULL DEFAULT '0',
   `totalPrice` DECIMAL(10,0) NOT NULL,
-  `statusId` INT(11) UNSIGNED NOT NULL,
+  `statusId` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `managerComment` MEDIUMTEXT NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_orders_users1_idx` (`userId` ASC),
@@ -183,18 +183,20 @@ CREATE TRIGGER before_car_ordered
     BEGIN
 		DECLARE msg VARCHAR(50);
 		IF 
-			NEW.endDate < (SELECT max(endDate) FROM
+			NEW.startDate <= (SELECT max(endDate) FROM
 							(SELECT endDate FROM orders WHERE carId = NEW.carId) dates)
 		THEN 
-			SET msg = 'Sorry, this car is not available on the selected dates';
+			SET msg = 'Dates are not available';
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 		ELSE 
 			IF
 				NEW.driver = 1
 			THEN
-				SET NEW.totalPrice = (SELECT price+driverPrice FROM cars WHERE id = NEW.carId);
+				SET NEW.totalPrice = (SELECT price+driverPrice FROM cars WHERE id = NEW.carId) * 
+                (NEW.endDate - NEW.startDate);
 			ELSE 
-				SET NEW.totalPrice = (SELECT price FROM cars WHERE id = NEW.carId);
+				SET NEW.totalPrice = (SELECT price FROM cars WHERE id = NEW.carId) * 
+                (NEW.endDate - NEW.startDate);
             END IF;
 		END IF;
     END //

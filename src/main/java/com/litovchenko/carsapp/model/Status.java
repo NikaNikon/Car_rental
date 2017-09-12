@@ -17,6 +17,8 @@ public class Status implements Identified {
 
     private String status;
 
+    public Status(){};
+
     public Status(int id, String status) {
         this.id = id;
         this.status = status;
@@ -24,16 +26,12 @@ public class Status implements Identified {
 
     @Override
     public Integer getId() {
-        return null;
+        return id;
     }
 
     @Override
     public void setId(Integer id) {
 
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getStatus() {

@@ -5,10 +5,7 @@ import com.litovchenko.carsapp.dao.CarDAO;
 import com.litovchenko.carsapp.model.Car;
 
 import javax.persistence.PersistenceException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +22,13 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     private static final String SELECT_BY_TEMPLATE;
 
     static {
-        SQL_INSERT_QUERY = "INSERT INTO" + CARS + " (" + ID + COMA + CAR_MODEL + COMA + CAR_CLASS_ID +
+        SQL_INSERT_QUERY = "INSERT INTO " + CARS + " (" + ID + COMA + CAR_MODEL + COMA + CAR_CLASS_ID +
                 COMA + CAR_PRICE + COMA + CAR_FULL_NAME + COMA + DESCRIPTION + COMA + CAR_STATUS +
-                COMA + DRIVER_PRICE + ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?";
+                COMA + DRIVER_PRICE + ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
 
-        SQL_UPDATE_QUERY = "UPDATE " + CARS + "SET " + CAR_MODEL + EQ_COMA + CAR_CLASS_ID + EQ_COMA +
+        SQL_UPDATE_QUERY = "UPDATE " + CARS + " SET " + CAR_MODEL + EQ_COMA + CAR_CLASS_ID + EQ_COMA +
                 CAR_PRICE + EQ_COMA + CAR_FULL_NAME + EQ_COMA + DESCRIPTION + EQ_COMA + CAR_STATUS +
-                EQ_COMA + DRIVER_PRICE + EQ_PARAM + "WHERE " + ID + EQ_PARAM;
+                EQ_COMA + DRIVER_PRICE + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
 
         SQL_DELETE_QUERY = "DELETE FROM " + CARS + " WHERE " + ID + EQ_PARAM;
         SQL_SELECT_ALL_QUERY = "SELECT * FROM " + CARS;
@@ -100,7 +97,7 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
             st.setString(4, object.getFullName());
             st.setString(5, object.getDescription());
             st.setString(6, object.getStatus().toString());
-            st.setDouble(6, object.getDriverPrice());
+            st.setDouble(7, object.getDriverPrice());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -110,7 +107,7 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     protected void prepareStatementForUpdate(PreparedStatement st, Car object) {
         prepareStatementForInsert(st, object);
         try {
-            st.setInt(7, object.getId());
+            st.setInt(8, object.getId());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -169,4 +166,21 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
         return true;
     }
 
+    @Override
+    public List<String> getModels() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + CAR_MODEL + " FROM " + CARS;
+        try(Statement stm = con.createStatement()){
+            ResultSet rs = stm.executeQuery(sql);
+            while(rs.next()){
+                list.add(rs.getString(CAR_MODEL));
+            }
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
+        if(list.isEmpty()){
+            return null;
+        }
+        return list;
+    }
 }

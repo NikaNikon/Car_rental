@@ -135,4 +135,19 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
             throw new PersistenceException(e);
         }
     }
+
+    @Override
+    public boolean insert(PassportData object){
+        try (PreparedStatement pstm = con.prepareStatement(getInsertQuery())) {
+            prepareStatementForInsert(pstm, object);
+            if(pstm.executeUpdate() == 1){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Cannot insert object" + line_sep + e);
+            return false;
+        }
+        return false;
+    }
 }

@@ -10,7 +10,7 @@ INSERT	INTO statuses (status) VALUES
     
     
 
-INSERT INTO roles (id, roleName) VALUES
+INSERT INTO roles (roleName) VALUES
 	("CUSTOMER"),
     ("MANAGER"),
     ("ADMIN");
@@ -36,10 +36,15 @@ INSERT INTO cars (model, carClassId, price, fullName, description, status, drive
     "available", 50);
     
 INSERT INTO users (id, roleId, login, password, email, blocked) VALUES
-	(DEFAULT, 3, "admin", "admin", "admin@gmail.com", 0),
-    (DEFAULT, 2, "manager", "manager", "manager@gmail.com", 0),
-    (DEFAULT, 1, "Veronika07", "Veronika07", "nikon@gmail.com", 0),
-    (DEFAULT, 1, "Deptor", "Deptor", "deptor@gmail.com", 0);
+	(DEFAULT, 3, "admin", "21232f297a57a5a743894a0e4a801fc3", "admin@gmail.com", 0),
+    (DEFAULT, 2, "manager", "1d0258c2440a8d19e716292b231e3190", "manager@gmail.com", 0),
+    (DEFAULT, 1, "Veronika07", "191671e9b59fb2f0f24ca29f3a810d35", "nikon@gmail.com", 0),
+    (DEFAULT, 1, "Deptor", "ef86f37b44add77c782cf0ddf6fa2f88", "deptor@gmail.com", 0),
+    (DEFAULT, 1, "user123", "6ad14ba9986e3615423dfca256d04e3f", "user@gmail.com", 0),
+    (DEFAULT, 1, "simpleUser", "c755fe1256b92148bfd60fa50ea5328a", "simpleUser@gmail.com", DEFAULT);
+    
+INSERT INTO orders (id, userId, carId, startDate, endDate, orderDate, driver, totalPrice) 
+VALUES (DEFAULT, 5,3,'2017-09-15','2017-09-25','2017-09-11',1,0);
     
 INSERT INTO repairment_checks (id, userId, carId, date, price, comment, status) 
 	VALUES (DEFAULT, 4, 2, current_date(), 50, "comment", "UNPAYED"); 

@@ -45,14 +45,18 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
 
     @Override
     public T getById(Integer id) {
-        ResultSet rs = null;
+        T obj = null;
         try (PreparedStatement pstm = con.prepareStatement(getSelectQuery())) {
             pstm.setInt(1, id);
-            rs = pstm.executeQuery();
+            ResultSet rs = pstm.executeQuery();
+            List<T> list = parseResultSet(rs);
+            if(list!=null) {
+                obj = list.get(0);
+            }
         } catch (SQLException e) {
             System.out.println("Cannot get object by id" + line_sep + e);
         }
-        return parseResultSet(rs).get(0);
+        return obj;
     }
 
     @Override
@@ -77,7 +81,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
     public boolean update(T object) {
         try (PreparedStatement pstm = con.prepareStatement(getUpdateQuery())) {
             prepareStatementForUpdate(pstm, object);
-            if(pstm.executeUpdate() > 0){
+            if (pstm.executeUpdate() > 0) {
                 return true;
             }
         } catch (SQLException e) {
@@ -111,25 +115,25 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
         return list;
     }
 
-    protected List<T> getByStringParam(String sql, String value){
+    protected List<T> getByStringParam(String sql, String value) {
         List<T> list;
-        try(PreparedStatement pstm = con.prepareStatement(sql)){
+        try (PreparedStatement pstm = con.prepareStatement(sql)) {
             pstm.setString(1, value);
             ResultSet rs = pstm.executeQuery();
             list = parseResultSet(rs);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new PersistenceException(e);
         }
         return list;
     }
 
-    protected List<T> getByIntParam(String sql, int value){
+    protected List<T> getByIntParam(String sql, int value) {
         List<T> list;
-        try(PreparedStatement pstm = con.prepareStatement(sql)){
+        try (PreparedStatement pstm = con.prepareStatement(sql)) {
             pstm.setInt(1, value);
             ResultSet rs = pstm.executeQuery();
             list = parseResultSet(rs);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new PersistenceException(e);
         }
         return list;

@@ -17,6 +17,8 @@ public class Role implements Identified {
 
     private String roleName;
 
+    public Role(){};
+
     public Role(int id, String roleName) {
         this.id = id;
         this.roleName = roleName;

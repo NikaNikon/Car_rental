@@ -33,7 +33,7 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
         SQL_INSERT_QUERY = "INSERT INTO " + ORDERS + "(" + ID + COMA + USER_ID + COMA +
                 CAR_ID + COMA + START_DATE + COMA + END_DATE + COMA + ORDER_DATE + COMA +
                 DRIVER + COMA + TOTAL_PRICE + COMA + ORDER_STATUS_ID + COMA + ORDER_COMMENT +
-                ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, DEFAULT, ?)";
 
         SQL_UPDATE_QUERY = "UPDATE " + ORDERS + " SET " + USER_ID + EQ_COMA +
                 CAR_ID + EQ_COMA + START_DATE + EQ_COMA + END_DATE + EQ_COMA + ORDER_DATE + EQ_COMA +
@@ -109,8 +109,7 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
             st.setDate(5, object.getOrderDate());
             st.setBoolean(6, object.isDriver());
             st.setDouble(7, object.getTotalPrice());
-            st.setString(8, object.getStatus());
-            st.setString(9, object.getManagerComment());
+            st.setString(8, object.getManagerComment());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -120,6 +119,8 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
     protected void prepareStatementForUpdate(PreparedStatement st, Order object) {
         try {
             prepareStatementForInsert(st, object);
+            st.setInt(8, object.getStatusId());
+            st.setString(9, object.getManagerComment());
             st.setInt(10, object.getId());
         } catch (SQLException e) {
             throw new PersistenceException(e);
