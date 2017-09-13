@@ -143,16 +143,19 @@
         }
 
     </style>
+
 </head>
 <body>
 <header id="header">
-    <p>The best car rental company</p>
+    <form action="MainPageServlet" method="get">
+        <button class="btn-link">The best car rental company</button>
+    </form>
     <div style="margin-left: 85%">
         <c:choose>
             <c:when test="${sessionScope.user eq null}">
                 <form action="login" method="get">
-                    <button type="submit" class="btn btn-success" name="login" value="login">Log in</button>
-                    <button type="submit" class="btn btn-success" name="login" value="register">Register</button>
+                    <button type="submit" class="btn btn-success" name="action" value="login">Log in</button>
+                    <button type="submit" class="btn btn-success" name="action" value="register">Register</button>
                 </form>
             </c:when>
             <c:otherwise>
@@ -289,12 +292,7 @@
     </div>
 </div>
 <div id="footer-wrapper" align="center">
-    <footer id="footer"><p>Thanks for watching</p>
-        <p>Contacts:
-            <br>07nikon@gmail.com
-            <br>+380990372226
-        </p>
-    </footer>
+    <jsp:include page="Footer.jsp"></jsp:include>
 </div>
 </body>
 </html>

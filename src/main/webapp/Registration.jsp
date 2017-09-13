@@ -66,7 +66,9 @@
         }
 
         .form-signin #inputLogin,
-        .form-signin #inputPassword {
+        .form-signin #inputPassword
+        .form-signin #confirmPassword
+        .form-signin #inputEmail{
             direction: ltr;
             height: 44px;
             font-size: 16px;
@@ -113,16 +115,6 @@
         .btn.btn-signin:focus {
             background-color: #1EAE68;
         }
-
-        .forgot-password {
-            color: rgb(104, 145, 162);
-        }
-
-        .forgot-password:hover,
-        .forgot-password:active,
-        .forgot-password:focus {
-            color: #212121;
-        }
     </style>
 
 </head>
@@ -136,25 +128,25 @@
             <c:when test="${requestScope.msg ne null}">
                 <hr>
                 <div class="alert alert-danger">
-                    <strong>Oops!</strong>${requestScope.msg} Please, try again.
+                    <strong>Oops! </strong>${requestScope.msg} Please, try again.
                 </div>
                 <hr>
             </c:when>
         </c:choose>
         <form class="form-signin" action="login" method="post">
             <span id="reauth-email" class="reauth-email"></span>
-            <input type="text" id="inputLogin" class="form-control"
-                   placeholder="  Your login" required autofocus name="login">
-            <input type="password" pattern=".{5,12}" id="inputPassword" class="form-control"
-                   placeholder="  Your password (5 to 15 characters)" required name="password">
+            <input type="text" id="inputLogin" class="form-control" pattern="([A-Za-z0-9_]+){5,15}"
+                   placeholder="  Login" required autofocus name="login">
+            <input type="email" id="inputEmail" class="form-control" placeholder="  Email" required name="email">
+            <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="inputPassword" class="form-control"
+                   placeholder="  Password (5 to 15 characters)" required name="password">
+            <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="confirmPassword" class="form-control"
+                   placeholder="  Confirm password" required name="confirmPassword">
             <hr>
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="login">Log in
+                    name="action" value="register">Register
             </button>
         </form>
-        <a href="#" class="forgot-password">
-            Forgot the password?
-        </a>
     </div>
 </div>
 

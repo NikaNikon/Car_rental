@@ -36,9 +36,11 @@ public class MainPageServlet extends HttpServlet {
         }
 
         if (null != req.getParameter("carClass")) {
+            list = CarsService.getList();
             list = CarsService.pickByClass(list, req.getParameter("carClass"));
         }
         if (null != req.getParameter("model")) {
+            list = CarsService.getList();
             list = CarsService.pickByModel(list, req.getParameter("model"));
         }
         if (null != req.getParameter("minPrice") && req.getParameter("minPrice").length() > 0) {

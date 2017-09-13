@@ -7,9 +7,20 @@ import java.security.NoSuchAlgorithmException;
 
 public class LoginService {
 
-    public static boolean isValid(String email, String password) {
-        boolean isEmailValid = EmailValidator.getInstance().isValid(email);
-        return false;
+    public static String validateData(String login, String email, String password, String confirmPassword) {
+        if(!password.equals(confirmPassword)){
+            return "Passwords don't match.";
+        }
+        if(!login.matches("([A-Za-z0-9_]+){5,15}")){
+         return "Login is not valid.";
+        }
+        if(!EmailValidator.getInstance().isValid(email)){
+            return "Email is not valid.";
+        }
+        if(!password.matches("([A-Za-z0-9_]+){5,15}")){
+            return "Password is not valid.";
+        }
+        return "OK";
     }
 
     public static String hashPassword(String password) {
@@ -26,7 +37,6 @@ public class LoginService {
         } catch (NoSuchAlgorithmException e) {
             System.out.println("Cannot find algorithm to hash the password" + System.lineSeparator() + e);
         }
-        System.out.println(generatedPassword);
         return generatedPassword;
     }
 

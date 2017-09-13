@@ -6,7 +6,7 @@
 			maxActive="100" maxIdle="30" maxWait="10000"
 			username="root" password="ybrfybrfybrf"
 			driverClassName="com.mysql.jdbc.Driver"
-			defaultAutoCommit="true"
+			defaultAutoCommit="false"
 			defaultTransactionIsolation="READ_COMMITTED"
 			url="jdbc:mysql://localhost:3306/cars_test"/>
 			
