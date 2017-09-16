@@ -160,4 +160,37 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
             throw new PersistenceException(e);
         }
     }
+
+    @Override
+    public boolean updateBlockedStatus(boolean isBlocked, int id) {
+        int blocked = isBlocked == true? 1 : 0;
+        String sql = "UPDATE " + USERS + " SET " + BLOCKED + " = " + blocked +
+                " WHERE " + ID + " = " + id;
+        try(PreparedStatement pstm = con.prepareStatement(sql)){
+            if(pstm.executeUpdate() == 1){
+                return true;
+            }
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertWithRole(User user) {
+        String sql = "INSERT INTO " + USERS + "(" + ID + COMA + USER_ROLE_ID + COMA + LOGIN + COMA
+                + PASSWORD + COMA + EMAIL + COMA + BLOCKED + ") VALUES (DEFAULT, ?, ?, ?, ?, DEFAULT)";
+        try(PreparedStatement pstm = con.prepareStatement(sql)){
+            pstm.setInt(1, user.getRoleId());
+            pstm.setString(2, user.getLogin());
+            pstm.setString(3, user.getPassword());
+            pstm.setString(4, user.getEmail());
+            if(pstm.executeUpdate() == 1){
+                return true;
+            }
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
+        return false;
+    }
 }

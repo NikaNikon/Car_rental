@@ -22,7 +22,7 @@ public class MainPageServlet extends HttpServlet {
         if (req.getSession().getAttribute("cars") != null) {
             list = (List<Car>) req.getSession().getAttribute("cars");
         } else {
-            list = CarsService.getList();
+            list = CarsService.getAvailable();
         }
 
         if (null != req.getParameter("clear")) {
@@ -36,11 +36,11 @@ public class MainPageServlet extends HttpServlet {
         }
 
         if (null != req.getParameter("carClass")) {
-            list = CarsService.getList();
+            list = CarsService.getAvailable();
             list = CarsService.pickByClass(list, req.getParameter("carClass"));
         }
         if (null != req.getParameter("model")) {
-            list = CarsService.getList();
+            list = CarsService.getAvailable();
             list = CarsService.pickByModel(list, req.getParameter("model"));
         }
         if (null != req.getParameter("minPrice") && req.getParameter("minPrice").length() > 0) {
@@ -63,6 +63,7 @@ public class MainPageServlet extends HttpServlet {
 
         req.setAttribute("cars", list);
         req.setAttribute("classes", CarClassesService.getClasses());
+        req.setAttribute("models", CarsService.getModels());
         req.getRequestDispatcher("Main Page.jsp").forward(req, resp);
     }
 

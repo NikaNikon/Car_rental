@@ -16,4 +16,8 @@ public interface UserDAO extends GenericDAO<User>{
 
     List<User> getDeptors();
 
+    boolean updateBlockedStatus(boolean isBlocked, int id);
+
+    boolean insertWithRole(User user);
+
 }

@@ -36,8 +36,9 @@ public class Car implements Identified {
     public Car() {
     }
 
-    public Car(String model, int class_id, double price, String full_name,
+    public Car(int id, String model, int class_id, double price, String full_name,
                String description, Status status, double driver_price) {
+        this.id = id;
         this.model = model;
         this.carClassId = class_id;
         this.price = price;

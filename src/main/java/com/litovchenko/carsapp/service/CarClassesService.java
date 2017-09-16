@@ -10,6 +10,14 @@ import java.util.List;
 
 public class CarClassesService {
 
+    private static void closeFactory(DAOFactory factory){
+        try {
+            factory.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<String> getClasses(){
         DAOFactory factory = new MySqlDAOFactory();
         CarClassDAO dao = factory.getCarClassDAO();
@@ -18,6 +26,15 @@ public class CarClassesService {
         for(CarClass carClass: list){
             result.add(carClass.getCarClassName());
         }
+        closeFactory(factory);
         return result;
+    }
+
+    public static List<CarClass> getAll(){
+        DAOFactory factory = new MySqlDAOFactory();
+        CarClassDAO dao = factory.getCarClassDAO();
+        List<CarClass> list = dao.getAll();
+        closeFactory(factory);
+        return list;
     }
 }

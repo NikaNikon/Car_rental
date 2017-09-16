@@ -73,8 +73,8 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
             while (rs.next()) {
                 CarClassDAO carClassDAO = new MySqlCarClassDAO(con);
                 String car_class = carClassDAO.getById(rs.getInt(CAR_CLASS_ID)).getCarClassName();
-                Car car = new Car(rs.getString(CAR_MODEL), rs.getInt(CAR_CLASS_ID), rs.getDouble(CAR_PRICE),
-                        rs.getString(CAR_FULL_NAME), rs.getString(DESCRIPTION),
+                Car car = new Car(rs.getInt(ID), rs.getString(CAR_MODEL), rs.getInt(CAR_CLASS_ID),
+                        rs.getDouble(CAR_PRICE), rs.getString(CAR_FULL_NAME), rs.getString(DESCRIPTION),
                         Car.Status.valueOf(rs.getString(CAR_STATUS)), rs.getDouble(DRIVER_PRICE));
                 car.setCarClassName(car_class);
                 list.add(car);

@@ -72,7 +72,6 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
             }
         } catch (SQLException e) {
             System.out.println("Cannot insert object" + line_sep + e);
-            return false;
         }
         return false;
     }
@@ -95,12 +94,13 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
     public boolean deleteById(int id) {
         try (PreparedStatement pstm = con.prepareStatement(getDeleteQuery())) {
             pstm.setInt(1, id);
-            pstm.executeUpdate();
+            if(pstm.executeUpdate()==1){
+                return true;
+            }
         } catch (SQLException e) {
             System.out.println("Cannot delete object" + line_sep + e);
-            return false;
         }
-        return true;
+        return false;
     }
 
     @Override

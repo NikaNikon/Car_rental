@@ -2,6 +2,7 @@ package com.litovchenko.carsapp.controller;
 
 import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.LoginService;
+import com.litovchenko.carsapp.service.OrdersService;
 import com.litovchenko.carsapp.service.UsersServise;
 
 import javax.servlet.ServletException;
@@ -23,6 +24,11 @@ public class LoginServlet extends HttpServlet{
             }
             case "register": {
                 req.getRequestDispatcher("Registration.jsp").forward(req, resp);
+                break;
+            }
+            case "home": {
+                resp.sendRedirect("MainPageServlet");
+                break;
             }
         }
     }
@@ -37,6 +43,8 @@ public class LoginServlet extends HttpServlet{
                         LoginService.hashPassword(req.getParameter("password")));
                 if(user != null){
                     req.getSession().setAttribute("user", user);
+                    req.getSession().setAttribute("msg",
+                            OrdersService.checkAbilityToMakeOrders(user));
                     resp.sendRedirect("/MainPageServlet");
                 } else {
                     req.setAttribute("msg", "Invalid login or password.");
@@ -71,6 +79,7 @@ public class LoginServlet extends HttpServlet{
             case "logout": {
                 req.getSession().setAttribute("user", null);
                 resp.sendRedirect("/MainPageServlet");
+                break;
             }
         }
     }

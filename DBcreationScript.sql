@@ -182,6 +182,12 @@ CREATE TRIGGER before_car_ordered
     FOR EACH ROW
     BEGIN
 		DECLARE msg VARCHAR(50);
+        IF
+			EXISTS (SELECT * FROM repairment_checks WHERE userId = NEW.userID AND status LIKE 'unpayed')
+        THEN
+			SET msg = 'This user cannot make orders';
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+        END IF;
 		IF 
 			NEW.startDate <= (SELECT max(endDate) FROM
 							(SELECT endDate FROM orders WHERE carId = NEW.carId) dates)
@@ -200,4 +206,36 @@ CREATE TRIGGER before_car_ordered
             END IF;
 		END IF;
     END //
+    
+    CREATE TRIGGER before_car_deleted
+	BEFORE DELETE ON cars
+    FOR EACH ROW
+    BEGIN
+		DECLARE msg VARCHAR(50);
+		IF OLD.status LIKE 'IN_RENT'
+        THEN SET msg = 'This car is in rent. You can not delete it.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+        END IF;
+    END //
+    
+    CREATE TRIGGER change_car_status_before_order
+    BEFORE INSERT ON orders
+    FOR EACH ROW
+    BEGIN
+		UPDATE cars SET cars.status = "IN_RENT" WHERE cars.id = NEW.carId;
+    END //
+    
+    CREATE TRIGGER change_car_status_after_order_updated
+    AFTER UPDATE ON orders
+    FOR EACH ROW
+    BEGIN
+		IF
+			NEW.statusId IN 
+            (SELECT id FROM statuses s WHERE s.status LIKE "CLOSED" OR s.status LIKE "REJECTED" OR
+            s.status LIKE "EXPIRED" OR s.status LIKE "CANCELED")
+		THEN 
+			UPDATE cars SET cars.status = "AVAILABLE" where cars.id = NEW.carId;
+        END IF;
+    END //
+    
 DELIMITER ;

@@ -8,6 +8,6 @@
 			driverClassName="com.mysql.jdbc.Driver"
 			defaultAutoCommit="false"
 			defaultTransactionIsolation="READ_COMMITTED"
-			url="jdbc:mysql://localhost:3306/cars_test"/>
+			url="jdbc:mysql://localhost:3306/car_rental_db"/>
 			
 </Context>

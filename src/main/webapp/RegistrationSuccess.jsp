@@ -26,7 +26,7 @@
     <div class="row text-center">
         <div class="col-sm-6 col-sm-offset-3">
             <br><br> <h2 style="color:#0fad00">Congratulations, you successfully registered!</h2>
-            <img src="cars.png">
+            <img src="cars.png"><br><br>
             <a href="/MainPageServlet" class="btn btn-success">Search for a car</a>
             <br><br>
         </div>

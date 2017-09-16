@@ -36,11 +36,10 @@ public class MySqlDAOFactory extends DAOFactory {
         try {
             if (dataSource == null) {
                 connection = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/cars_test?user=root&password=ybrfybrfybrf");
+                        "jdbc:mysql://localhost:3306/car_rental_db?user=root&password=ybrfybrfybrf");
                 return connection;
             }
             connection = dataSource.getConnection();
-            System.out.println("Connections amount: " + (++count));
         } catch (SQLException e) {
             System.out.println("Cannot connect to database" + System.lineSeparator() + e);
         }

@@ -152,6 +152,12 @@
                     name="action" value="login">Log in
             </button>
         </form>
+
+        <form class="form-signin" action="login" method="post">
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                    name="action" value="home">Main page
+            </button>
+        </form>
         <a href="#" class="forgot-password">
             Forgot the password?
         </a>

@@ -95,7 +95,7 @@
 
         #header {
             font-size: large;
-            padding: 0.3em;
+            padding: 0.15em;
             background: #BCCE98;
         }
 
@@ -149,22 +149,58 @@
 <header id="header">
     <form action="MainPageServlet" method="get">
         <button class="btn-link">The best car rental company</button>
+        <hr>
     </form>
-    <div style="margin-left: 85%">
+    <div>
         <c:choose>
             <c:when test="${sessionScope.user eq null}">
-                <form action="login" method="get">
-                    <button type="submit" class="btn btn-success" name="action" value="login">Log in</button>
-                    <button type="submit" class="btn btn-success" name="action" value="register">Register</button>
-                </form>
+                <div style="margin-left: 85%">
+                    <form action="login" method="get">
+                        <button type="submit" class="btn btn-success" name="action" value="login">Log in</button>
+                        <button type="submit" class="btn btn-success" name="action" value="register">Register</button>
+                    </form>
+                </div>
             </c:when>
             <c:otherwise>
-                <p>You signed in as ${sessionScope.user.login}</p>
-                <form action="login" method="post">
-                    <button type="submit" class="btn btn-success" name="action"
-                            value="logout" style="align:center;">Log out
-                    </button>
-                </form>
+                <div style="margin-left: 75%">
+                    <form action="login" method="post">You signed in as ${sessionScope.user.login}
+                        <button type="submit" class="btn btn-success" name="action" value="logout"
+                                style="background-color:#3B3B3B;border-color:#3B3B3B;">Log out
+                        </button>
+                    </form>
+                </div>
+                <c:choose>
+                    <c:when test="${sessionScope.user.role eq 'ADMIN'}">
+                        <div style="margin-left: 75%">
+                            <form action="admin" method="get">
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="cars">Cars
+                                </button>
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="users">Users
+                                </button>
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="managers">Managers
+                                </button>
+                            </form>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div style="margin-left: 73%">
+                            <form action="user" method="get">
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="orders">Orders
+                                </button>
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="checks">Checks
+                                </button>
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="personalPage">Personal page
+                                </button>
+                            </form>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
         </c:choose>
 
@@ -193,18 +229,12 @@
         <h5>Models:</h5>
         <ul>
             <form action="MainPageServlet" , method="get">
-                <li>
-                    <button type="submit" class="btn-link" name="model" value="Peugeot">Peugeot</button>
-                </li>
-                <li>
-                    <button type="submit" class="btn-link" name="model" value="Daewoo">Daewoo</button>
-                </li>
-                <li>
-                    <button type="submit" class="btn-link" name="model" value="Infiniti">Infiniti</button>
-                </li>
-                <li>
-                    <button type="submit" class="btn-link" name="model" value="Mercedes">Mercedes</button>
-                </li>
+                <c:forEach items="${requestScope.models}" var="carModel">
+                    <li>
+                        <button type="submit" class="btn-link" name="model" value="${carModel}">
+                                ${carModel}</button>
+                    </li>
+                </c:forEach>
             </form>
         </ul>
         <br>
@@ -251,7 +281,7 @@
         </form>
 
         <table class="table">
-            <form action="MainPageServlet" method="get">
+            <form action="order" method="get">
                 <thead class="thead-inverse">
                 <tr>
                     <th></th>
@@ -281,9 +311,41 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <button class="btn btn-success" type="submit" id="${current.id}"> Order</button>
-                        </td>
+                        <c:choose>
+                            <c:when test="${sessionScope.user ne null}">
+                                <c:choose>
+                                    <c:when test="${sessionScope.msg eq 'OK'}">
+                                        <td>
+                                            <button class="btn btn-success" type="submit" name="action"
+                                                    value="${current.id}">Order</button>
+                                        </td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-success" type="submit" disabled
+                                                        name="action" value="${current.id}">Order</button>
+                                                <div class="dropdown-content">
+                                                    <p>You cant make orders (${sessionScope.msg}).</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </c:otherwise>
+                                </c:choose>
+
+                            </c:when>
+                            <c:otherwise>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-success" type="submit" disabled
+                                                name="action" value="${current.id}">Order</button>
+                                        <div class="dropdown-content">
+                                            <p>You must be logged in</p>
+                                        </div>
+                                    </div>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
                     </tr>
                 </c:forEach>
                 </tbody>
