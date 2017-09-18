@@ -13,7 +13,7 @@
 
 
         .card-container.card {
-            max-width: 400px;
+            max-width: 570px;
             min-height: 450px;
             padding: 40px 40px;
         }
@@ -137,42 +137,63 @@
         <form class="form-signin" action="order" method="post">
             <span id="reauth-email" class="reauth-email"></span>
 
-            <label for="inputName">First name</label>
-            <input class="form-control" id="inputName" type="text" pattern="([A-Z][a-z]+)" name="name" required>
+            <c:choose>
+                <c:when test="${sessionScope.user.passportData eq null}">
+                    <label for="inputName">First name</label>
+                    <input class="form-control" id="inputName" type="text" pattern="([A-Z][a-z]+)" name="name" required>
 
-            <label for="inputMiddleName">Middle name</label>
-            <input class="form-control" id="inputMiddleName" type="text" pattern="([A-Z][a-z]+)" name="middleName"
-                   required>
+                    <label for="inputMiddleName">Middle name</label>
+                    <input class="form-control" id="inputMiddleName" type="text" pattern="([A-Z][a-z]+)" name="middleName"
+                           required>
 
-            <label for="inputLastName">Last name</label>
-            <input class="form-control" id="inputLastName" type="text" pattern="([A-Z][a-z]+)" name="lastName" required>
+                    <label for="inputLastName">Last name</label>
+                    <input class="form-control" id="inputLastName" type="text" pattern="([A-Z][a-z]+)" name="lastName" required>
 
-            <label for="dateOfBirth">Date of birth</label>
-            <input type="date" class="form-control"  id="dateOfBirth"
-                   name="dateOfBirth" max="${requestScope.maxDateOfBirth}" required>
+                    <label for="dateOfBirth">Date of birth</label>
+                    <input type="date" class="form-control"  id="dateOfBirth"
+                           name="dateOfBirth" max="${requestScope.maxDateOfBirth}" required>
 
-            <label for="inputPhone">Phone</label>
-            <input class="form-control" type="text" id="inputPhone" name="phone"
-                   placeholder="+38(0 _ _) _ _ _ _ _ _ _"
-                   pattern="(\+380.{9})" required>
-
-            <label for="inputDriver">Driver</label>
-            <input class="form-control" type="checkbox" name="driver" id="inputDriver">
-
+                    <label for="inputPhone">Phone</label>
+                    <input class="form-control" type="text" id="inputPhone" name="phone"
+                           placeholder="+38(0 _ _) _ _ _ _ _ _ _"
+                           pattern="(\+380.{9})" required>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="passport" value="${sessionScope.user.passportData}"></c:set>
+                    <input class="form-control" type="text" name="name" disabled value="${passport.firstName}">
+                    <input class="form-control" type="text" name="middleName" disabled
+                           value="${passport.middleName}">
+                    <input class="form-control" type="text" name="lastName" disabled
+                           value="${passport.lastName}">
+                    <input type="date" class="form-control" name="dateOfBirth" disabled value="${requestScope.birthday}">
+                    <br>
+                    <input class="form-control" type="text" name="phone" disabled value="${passport.phone}">
+                    <div class="alert alert-info">
+                        <strong>Info!</strong> If you want to change your passport data, you can do it
+                        in your profile before making order.
+                    </div>
+                </c:otherwise>
+            </c:choose>
 
             <hr>
-            <label>Rental dates: </label><br>
+            <label>Rental dates </label><br>
             <div style="display: inline-block">
-                <label for="start">Start:</label>
+                <label for="start">From:</label>
                 <br>
-                <input class="form-control" type="text" id="start" name="startDate" required>
+                <input class="form-control"  style="width: 80%" type="text" id="start" name="startDate" required>
             </div>
 
             <div style="display: inline-block">
-                <label for="end">End:</label>
+                <label for="end">To:</label>
                 <br>
-                <input class="form-control" type="text" id="end" name="endDate" required>
+                <input class="form-control" style="width: 80%" type="text" id="end" name="endDate" required>
             </div>
+
+            <br><br>
+            <div class="checkbox">
+            <label><input type="checkbox" name="driver"> Driver </label>
+            </div>
+
 
             <script src="js/moment.min.js"></script>
             <script src="js/pickaday.js"></script>
@@ -227,7 +248,7 @@
 
             <input type="hidden" name="carId" value="${requestScope.carId}">
 
-            <hr>
+            <hr><br>
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
                     name="action" value="makeOrder">Make order
             </button>

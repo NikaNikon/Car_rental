@@ -28,7 +28,7 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
 
         SQL_INSERT_QUERY = "INSERT INTO " + PASSPORT_DATA + "(" + USER_ID + COMA +
                 FIRST_NAME + COMA + MIDDLE_NAME + COMA + LAST_NAME + COMA + DATE_OF_BIRTH + COMA +
-                PHONE + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+                PHONE + ") VALUES (?, ?, ?, ?, ?, ?)";
 
         SQL_UPDATE_QUERY = "UPDATE " + PASSPORT_DATA + " SET " + EQ_COMA + FIRST_NAME +
                 EQ_COMA + MIDDLE_NAME + EQ_COMA + LAST_NAME + EQ_COMA + DATE_OF_BIRTH + EQ_COMA +
@@ -74,6 +74,19 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
     @Override
     protected String getUpdateQuery() {
         return SQL_UPDATE_QUERY;
+    }
+
+    @Override
+    public boolean insert(PassportData object) {
+        try(PreparedStatement pstm = con.prepareStatement(getInsertQuery())){
+            prepareStatementForInsert(pstm, object);
+            if(pstm.executeUpdate() == 1){
+                return true;
+            }
+        } catch (SQLException e){
+            System.out.println("Cannot insert object" + line_sep + e);
+        }
+        return false;
     }
 
     @Override

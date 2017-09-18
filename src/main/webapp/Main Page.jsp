@@ -150,6 +150,8 @@
 
     </style>
 
+    <script type="text/javascript" src="js/calendar.js"></script>
+
 </head>
 <body>
 <header id="header">
@@ -297,6 +299,7 @@
                     <th style="white-space: pre;">Driver price</th>
                     <th>Status</th>
                     <th style="white-space: pre;">Description</th>
+                    <%--<th>Available dates</th>--%>
                     <th></th>
                 </tr>
                 </thead>
@@ -317,6 +320,9 @@
                                 </div>
                             </div>
                         </td>
+                        <%--<td><div><script type="text/javascript">calendar();</script></div></td>--%>
+
+
                         <c:choose>
                             <c:when test="${sessionScope.user ne null}">
                                 <c:choose>

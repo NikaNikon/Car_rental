@@ -24,6 +24,12 @@ public class OrderServlet extends HttpServlet {
             if (!CarsService.changeStatus(CarsService.getById(id), Car.Status.IN_RENT)) {
                 resp.sendRedirect("ErrPage.jsp");
             } else {
+                if(((User)(req.getSession().getAttribute("user"))).getPassportData() != null){
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String birthday = sdf.format(((User)(req.getSession().getAttribute("user"))).
+                            getPassportData().getDateOfBirth());
+                    req.setAttribute("birthday", birthday);
+                }
                 req.setAttribute("carId", Integer.parseInt(id));
                 req.setAttribute("maxDateOfBirth", OrdersService.getMaxDateOfBirth());
                 req.setAttribute("minStartDate", OrdersService.getDaysAfterToday(1));
@@ -55,7 +61,7 @@ public class OrderServlet extends HttpServlet {
             System.out.println(driver);
             CarsService.changeStatus(CarsService.getById(req.getParameter("carId")),
                     Car.Status.AVAILABLE);
-            /*if (!OrdersService.makeOrder(req.getParameter("name"), req.getParameter("middleName"),
+            if (!OrdersService.makeOrder(req.getParameter("name"), req.getParameter("middleName"),
                     req.getParameter("lastName"), OrdersService.getDate(req.getParameter("dateOfBirth")),
                     req.getParameter("phone"), ((User) req.getSession().getAttribute("user")).getId(),
                     Integer.parseInt(req.getParameter("carId")),
@@ -65,8 +71,8 @@ public class OrderServlet extends HttpServlet {
                         Car.Status.AVAILABLE);
                 resp.sendRedirect("ErrPage.jsp");
             } else {
-
-            }*/
+                resp.sendRedirect("OrderSuccess.jsp");
+            }
         }
     }
 }

@@ -116,7 +116,10 @@ public class OrdersService {
                 orderDate, driver, 0, 0);
 
         factory.startTransaction();
-        if(passportDao.insert(passport) == false || dao.insert(order) == false){
+        boolean isPassportDataInserted = passportDao.insert(passport);
+        boolean isOrderInserted = dao.insert(order);
+        System.out.println(isPassportDataInserted + "           " + isOrderInserted);
+        if(isPassportDataInserted == false || isOrderInserted == false){
             factory.abortTransaction();
             closeFactory(factory);
             return false;

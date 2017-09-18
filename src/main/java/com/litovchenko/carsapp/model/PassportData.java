@@ -2,6 +2,7 @@ package com.litovchenko.carsapp.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import static com.litovchenko.carsapp.model.Constants.*;
 
@@ -9,8 +10,7 @@ import static com.litovchenko.carsapp.model.Constants.*;
 @Table(name = PASSPORT_DATA)
 public class PassportData implements Identified {
 
-    @Id
-    private int id;
+    private int userId;
 
     private String firstName;
 
@@ -20,6 +20,9 @@ public class PassportData implements Identified {
 
     private Date dateOfBirth;
 
+    @Transient
+    private String birthday;
+
     private String phone;
 
     private PassportData() {
@@ -27,27 +30,27 @@ public class PassportData implements Identified {
 
     public PassportData(int userId, String firstName, String middleName,
                         String lastName, Date dateOfBirth, String phone) {
-        id = userId;
+        this.userId = userId;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.phone = phone;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        birthday = sdf.format(dateOfBirth);
+
     }
 
 
     @Override
     public Integer getId() {
-        return id;
+        return userId;
     }
 
     @Override
     public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.userId = id;
     }
 
     public String getFirstName() {

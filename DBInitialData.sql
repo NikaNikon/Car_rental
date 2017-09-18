@@ -70,8 +70,8 @@ INSERT INTO users (id, roleId, login, password, email, blocked) VALUES
     (DEFAULT, 1, "simpleUser", "c755fe1256b92148bfd60fa50ea5328a", "simpleUser@gmail.com", DEFAULT);
     
 INSERT INTO passport_data (userId,firstName,middleName,lastName,dateOfBirth,phone)
-VALUES  (5,"Veronika","Yurievna","Litovchenko",'1997-07-07',"0990372226"),
-		(7, "user", "user", "user", '1994-09-08', "123456");
+VALUES  (5,"Veronika","Yurievna","Litovchenko",'1997-07-07',"+380990372226"),
+		(7, "user", "user", "user", '1994-09-08', "+380951234567");
     
 INSERT INTO orders (id, userId, carId, startDate, endDate, orderDate, driver, totalPrice, statusId) 
 VALUES  (DEFAULT, 7,3,'2017-09-17','2017-09-25','2017-09-11',1,0, default),
