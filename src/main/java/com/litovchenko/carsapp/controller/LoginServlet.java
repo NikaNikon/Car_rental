@@ -47,7 +47,10 @@ public class LoginServlet extends HttpServlet{
                             OrdersService.checkAbilityToMakeOrders(user));
                     resp.sendRedirect("/MainPageServlet");
                 } else {
-                    req.setAttribute("msg", "Invalid login or password.");
+
+                    System.out.println("user == null");
+
+                    req.setAttribute("errMsg", "Invalid login or password.");
                     req.getRequestDispatcher("Login.jsp").forward(req, resp);
                 }
                 break;
@@ -58,9 +61,11 @@ public class LoginServlet extends HttpServlet{
                 switch(validation){
                     case "OK": {
                         user = UsersServise.addUser(req.getParameter("login"), req.getParameter("email"),
-                                req.getParameter("password"));
+                                LoginService.hashPassword(req.getParameter("password")));
                         if(user != null){
                             req.getSession().setAttribute("user", user);
+                            req.getSession().setAttribute("msg",
+                                    OrdersService.checkAbilityToMakeOrders(user));
                             resp.sendRedirect("RegistrationSuccess.jsp");
                         } else {
                             resp.sendRedirect("ErrPage.jsp");

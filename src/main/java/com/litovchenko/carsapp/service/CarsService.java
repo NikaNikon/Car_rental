@@ -170,4 +170,13 @@ public class CarsService {
         return list;
     }
 
+    public static boolean changeStatus(Car car, Car.Status newStatus){
+        car.setStatus(newStatus);
+        DAOFactory factory = new MySqlDAOFactory();
+        CarDAO dao = factory.getCarDAO();
+        boolean ifUpdated = dao.update(car);
+        closeFactory(factory);
+        return ifUpdated;
+    }
+
 }

@@ -21,7 +21,7 @@ public class UsersServise {
         DAOFactory factory = new MySqlDAOFactory();
         UserDAO dao = factory.getUserDAO();
         User user = dao.getByLogin(login, password);
-       closeDaoFactory(factory);
+        closeDaoFactory(factory);
         return user;
     }
 

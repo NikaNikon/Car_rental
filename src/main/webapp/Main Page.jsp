@@ -142,6 +142,12 @@
             border-radius: 0
         }
 
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
     </style>
 
 </head>
@@ -317,7 +323,7 @@
                                     <c:when test="${sessionScope.msg eq 'OK'}">
                                         <td>
                                             <button class="btn btn-success" type="submit" name="action"
-                                                    value="${current.id}">Order</button>
+                                                    value="order_${current.id}">Order</button>
                                         </td>
                                     </c:when>
                                     <c:otherwise>

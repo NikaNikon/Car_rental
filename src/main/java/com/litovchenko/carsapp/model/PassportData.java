@@ -12,8 +12,6 @@ public class PassportData implements Identified {
     @Id
     private int id;
 
-    private String passportCode;
-
     private String firstName;
 
     private String middleName;
@@ -27,10 +25,9 @@ public class PassportData implements Identified {
     private PassportData() {
     }
 
-    public PassportData(int userId, String passportCode, String firstName, String middleName,
+    public PassportData(int userId, String firstName, String middleName,
                         String lastName, Date dateOfBirth, String phone) {
         id = userId;
-        this.passportCode = passportCode;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
@@ -51,14 +48,6 @@ public class PassportData implements Identified {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getPassportCode() {
-        return passportCode;
-    }
-
-    public void setPassportCode(String passportCode) {
-        this.passportCode = passportCode;
     }
 
     public String getFirstName() {

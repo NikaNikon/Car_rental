@@ -32,8 +32,8 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
 
         SQL_INSERT_QUERY = "INSERT INTO " + ORDERS + "(" + ID + COMA + USER_ID + COMA +
                 CAR_ID + COMA + START_DATE + COMA + END_DATE + COMA + ORDER_DATE + COMA +
-                DRIVER + COMA + TOTAL_PRICE + COMA + ORDER_STATUS_ID + COMA + ORDER_COMMENT +
-                ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, DEFAULT, ?)";
+                DRIVER + COMA + TOTAL_PRICE + COMA + ORDER_STATUS_ID +
+                ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, DEFAULT)";
 
         SQL_UPDATE_QUERY = "UPDATE " + ORDERS + " SET " + USER_ID + EQ_COMA +
                 CAR_ID + EQ_COMA + START_DATE + EQ_COMA + END_DATE + EQ_COMA + ORDER_DATE + EQ_COMA +
@@ -78,7 +78,7 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
                 MySqlCarDAO carDAO = new MySqlCarDAO(con);
                 MySqlUserDAO userDAO = new MySqlUserDAO(con);
                 MySqlStatusDAO statusDAO = new MySqlStatusDAO(con);
-                Order order = new Order(rs.getInt(USER_ID), rs.getInt(CAR_ID), rs.getDate(START_DATE),
+                Order order = new Order(rs.getInt(ID), rs.getInt(USER_ID), rs.getInt(CAR_ID), rs.getDate(START_DATE),
                         rs.getDate(END_DATE), rs.getDate(ORDER_DATE), rs.getBoolean(DRIVER),
                         rs.getDouble(TOTAL_PRICE), rs.getInt(ORDER_STATUS_ID));
                 if (rs.getString(ORDER_COMMENT) != null) {
@@ -109,7 +109,6 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
             st.setDate(5, object.getOrderDate());
             st.setBoolean(6, object.isDriver());
             st.setDouble(7, object.getTotalPrice());
-            st.setString(8, object.getManagerComment());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }

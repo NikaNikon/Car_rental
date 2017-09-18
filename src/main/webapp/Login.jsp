@@ -133,7 +133,7 @@
         <img id="profile-img" class="profile-img-card" src="user.png"/>
         <p id="profile-name" class="profile-name-card"></p>
         <c:choose>
-            <c:when test="${requestScope.msg ne null}">
+            <c:when test="${requestScope.errMsg ne null}">
                 <hr>
                 <div class="alert alert-danger">
                     <strong>Oops!</strong>${requestScope.msg} Please, try again.
@@ -153,7 +153,7 @@
             </button>
         </form>
 
-        <form class="form-signin" action="login" method="post">
+        <form class="form-signin" action="MainPageServlet" method="get">
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
                     name="action" value="home">Main page
             </button>

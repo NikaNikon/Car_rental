@@ -105,14 +105,12 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `passport_data` (
   `userId` INT(11) UNSIGNED NOT NULL,
-  `passportCode` VARCHAR(12) NOT NULL,
   `firstName` VARCHAR(30) NOT NULL,
   `middleName` VARCHAR(30) NOT NULL,
   `lastName` VARCHAR(30) NOT NULL,
   `dateOfBirth` DATE NOT NULL,
   `phone` VARCHAR(13) NOT NULL,
   PRIMARY KEY (`userId`),
-  UNIQUE INDEX `passport_code_UNIQUE` (`passportCode` ASC),
   CONSTRAINT `fk_passport_data_users1`
     FOREIGN KEY (`userId`)
     REFERENCES `users` (`id`)
@@ -164,17 +162,6 @@ CREATE PROCEDURE findOrdersByStatus (ord_stat VARCHAR(45))
 	BEGIN
 		SELECT * from orders, statuses
         WHERE statuses.id = orders.statusId AND status LIKE ord_stat;
-    END //
-    
-CREATE FUNCTION abilityToMakeOrders (user INT(11))
-	RETURNS BINARY(1)
-    BEGIN
-		DECLARE ability BINARY(1);
-		IF EXISTS (select * from repairment_checks where userId = user AND status LIKE 'unpayed')
-			THEN SET ability = 0;
-		ELSE SET ability = 1;
-        END IF;
-	RETURN ability;
     END //
     
 CREATE TRIGGER before_car_ordered 

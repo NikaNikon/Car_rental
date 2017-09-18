@@ -62,7 +62,6 @@ public interface Constants {
     String PASSWORD = "password";
     String EMAIL = "email";
     String BLOCKED = "blocked";
-    String PASSPORT_CODE = "passportCode";
     String FIRST_NAME = "firstName";
     String MIDDLE_NAME = "middleName";
     String LAST_NAME = "lastName";

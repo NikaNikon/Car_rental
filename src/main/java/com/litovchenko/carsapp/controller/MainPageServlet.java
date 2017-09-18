@@ -27,7 +27,7 @@ public class MainPageServlet extends HttpServlet {
 
         if (null != req.getParameter("clear")) {
             req.getSession().setAttribute("cars", null);
-            doPost(req, resp);
+            resp.sendRedirect("/MainPageServlet");
             return;
         }
 
@@ -65,13 +65,5 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("classes", CarClassesService.getClasses());
         req.setAttribute("models", CarsService.getModels());
         req.getRequestDispatcher("Main Page.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        if (null != req.getParameter("clear")) {
-            resp.sendRedirect("/MainPageServlet");
-        }
     }
 }

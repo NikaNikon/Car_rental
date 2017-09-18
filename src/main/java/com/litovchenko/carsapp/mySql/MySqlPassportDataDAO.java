@@ -26,28 +26,17 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
         SQL_SELECT_QUERY = SQL_SELECT_ALL_QUERY + " WHERE " + USER_ID + EQ_PARAM;
         SQL_DELETE_QUERY = "DELETE FROM " + PASSPORT_DATA + " WHERE " + USER_ID + EQ_PARAM;
 
-        SQL_INSERT_QUERY = "INSERT INTO " + PASSPORT_DATA + "(" + USER_ID + COMA + PASSPORT_CODE + COMA +
+        SQL_INSERT_QUERY = "INSERT INTO " + PASSPORT_DATA + "(" + USER_ID + COMA +
                 FIRST_NAME + COMA + MIDDLE_NAME + COMA + LAST_NAME + COMA + DATE_OF_BIRTH + COMA +
                 PHONE + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        SQL_UPDATE_QUERY = "UPDATE " + PASSPORT_DATA + " SET " + PASSPORT_CODE + EQ_COMA + FIRST_NAME +
+        SQL_UPDATE_QUERY = "UPDATE " + PASSPORT_DATA + " SET " + EQ_COMA + FIRST_NAME +
                 EQ_COMA + MIDDLE_NAME + EQ_COMA + LAST_NAME + EQ_COMA + DATE_OF_BIRTH + EQ_COMA +
                 PHONE + EQ_PARAM + " WHERE " + USER_ID + EQ_PARAM;
     }
 
     public MySqlPassportDataDAO(Connection con) {
         super(con);
-    }
-
-    @Override
-    public PassportData getByCode(String code) {
-        List<PassportData> list;
-        String sql = SQL_SELECT_ALL_QUERY + " WHERE " + PASSPORT_CODE + EQ_PARAM;
-        list = getByStringParam(sql, code);
-        if (list == null) {
-            return null;
-        }
-        return list.get(0);
     }
 
     @Override
@@ -92,7 +81,7 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
         List<PassportData> list = new ArrayList<>();
         try {
             while (rs.next()) {
-                PassportData data = new PassportData(rs.getInt(USER_ID), rs.getString(PASSPORT_CODE),
+                PassportData data = new PassportData(rs.getInt(USER_ID),
                         rs.getString(FIRST_NAME), rs.getString(MIDDLE_NAME), rs.getString(LAST_NAME),
                         rs.getDate(DATE_OF_BIRTH), rs.getString(PHONE));
                 list.add(data);
@@ -110,12 +99,11 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
     protected void prepareStatementForInsert(PreparedStatement st, PassportData object) {
         try {
             st.setInt(1, object.getId());
-            st.setString(2, object.getPassportCode());
-            st.setString(3, object.getFirstName());
-            st.setString(4, object.getMiddleName());
-            st.setString(5, object.getLastName());
-            st.setDate(6, object.getDateOfBirth());
-            st.setString(7, object.getPhone());
+            st.setString(2, object.getFirstName());
+            st.setString(3, object.getMiddleName());
+            st.setString(4, object.getLastName());
+            st.setDate(5, object.getDateOfBirth());
+            st.setString(6, object.getPhone());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -124,30 +112,14 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
     @Override
     protected void prepareStatementForUpdate(PreparedStatement st, PassportData object) {
         try {
-            st.setString(1, object.getPassportCode());
-            st.setString(2, object.getFirstName());
-            st.setString(3, object.getMiddleName());
-            st.setString(4, object.getLastName());
-            st.setDate(5, object.getDateOfBirth());
-            st.setString(6, object.getPhone());
-            st.setInt(7, object.getId());
+            st.setString(1, object.getFirstName());
+            st.setString(2, object.getMiddleName());
+            st.setString(3, object.getLastName());
+            st.setDate(4, object.getDateOfBirth());
+            st.setString(5, object.getPhone());
+            st.setInt(6, object.getId());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
-    }
-
-    @Override
-    public boolean insert(PassportData object){
-        try (PreparedStatement pstm = con.prepareStatement(getInsertQuery())) {
-            prepareStatementForInsert(pstm, object);
-            if(pstm.executeUpdate() == 1){
-                return true;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Cannot insert object" + line_sep + e);
-            return false;
-        }
-        return false;
     }
 }

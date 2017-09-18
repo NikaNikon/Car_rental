@@ -43,8 +43,9 @@ public class Order implements Identified {
     public Order() {
     }
 
-    public Order(int user_id, int car_id, Date start_date, Date end_date, Date order_date,
+    public Order(int id, int user_id, int car_id, Date start_date, Date end_date, Date order_date,
                  boolean driver, double total_price, int status_id) {
+        this.id = id;
         this.userId = user_id;
         this.carId = car_id;
         this.startDate = start_date;
