@@ -4,6 +4,7 @@ import com.litovchenko.carsapp.model.Car;
 import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.CarsService;
 import com.litovchenko.carsapp.service.OrdersService;
+import com.litovchenko.carsapp.service.UsersServise;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 
 @WebServlet("/order")
-public class OrderServlet extends HttpServlet {
+public class OrderFormServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -24,9 +25,9 @@ public class OrderServlet extends HttpServlet {
             if (!CarsService.changeStatus(CarsService.getById(id), Car.Status.IN_RENT)) {
                 resp.sendRedirect("ErrPage.jsp");
             } else {
-                if(((User)(req.getSession().getAttribute("user"))).getPassportData() != null){
+                if (((User) (req.getSession().getAttribute("user"))).getPassportData() != null) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String birthday = sdf.format(((User)(req.getSession().getAttribute("user"))).
+                    String birthday = sdf.format(((User) (req.getSession().getAttribute("user"))).
                             getPassportData().getDateOfBirth());
                     req.setAttribute("birthday", birthday);
                 }
@@ -51,16 +52,9 @@ public class OrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if ("makeOrder".equals(req.getParameter("action"))) {
             boolean driver = "on".equals(req.getParameter("driver"));
-            System.out.println(req.getParameter("name"));
-            System.out.println(req.getParameter("middleName"));
-            System.out.println(req.getParameter("lastNme"));
-            System.out.println(req.getParameter("dateOfBirth"));
-            System.out.println(req.getParameter("phone"));
-            System.out.println(req.getParameter("startDate"));
-            System.out.println(req.getParameter("endDate"));
-            System.out.println(driver);
-            CarsService.changeStatus(CarsService.getById(req.getParameter("carId")),
-                    Car.Status.AVAILABLE);
+           CarsService.changeStatus(CarsService.getById(req.getParameter("carId")),
+                    Car.Status.IN_RENT);
+
             if (!OrdersService.makeOrder(req.getParameter("name"), req.getParameter("middleName"),
                     req.getParameter("lastName"), OrdersService.getDate(req.getParameter("dateOfBirth")),
                     req.getParameter("phone"), ((User) req.getSession().getAttribute("user")).getId(),
@@ -71,6 +65,9 @@ public class OrderServlet extends HttpServlet {
                         Car.Status.AVAILABLE);
                 resp.sendRedirect("ErrPage.jsp");
             } else {
+                req.getSession().setAttribute("cars", null);
+                req.getSession().setAttribute("user",
+                        UsersServise.getUser(((User)(req.getSession().getAttribute("user"))).getId()));
                 resp.sendRedirect("OrderSuccess.jsp");
             }
         }

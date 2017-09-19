@@ -15,7 +15,7 @@ public class UserServlet extends HttpServlet{
         if(req.getParameter("action") != null){
             switch(req.getParameter("action")){
                 case "orders":{
-
+                    resp.sendRedirect("/orders");
                     break;
                 }
                 case "checks": {

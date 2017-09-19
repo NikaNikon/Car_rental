@@ -10,10 +10,9 @@
 
     <style>
 
-
         .card-container.card {
-            max-width: 400px;
-            min-height: 450px;
+            width: 500px;
+            min-height: 550px;
             padding: 40px 40px;
         }
 
@@ -48,7 +47,7 @@
             min-height: 1em;
         }
 
-        .reauth-email .reauth-emaill {
+        .reauth-email {
             display: block;
             color: #404040;
             line-height: 2;
@@ -63,21 +62,12 @@
             box-sizing: border-box;
         }
 
-        .form-signin #inputLogin,
-        .form-signin #inputPassword
-        .form-signin #confirmPassword
-        .form-signin #confirmPasswordd
-        .form-signin #inputLoginn
-        .form-signin #inputPasswordd
-        .form-signin #inputEmaill
-        .form-signin #inputEmail{
+        .form-signin {
             direction: ltr;
             height: 44px;
             font-size: 16px;
         }
 
-        .form-signin input[type=email],
-        .form-signin input[type=password],
         .form-signin input[type=text],
         .form-signin button {
             width: 100%;
@@ -123,6 +113,7 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
     </style>
 
 </head>
@@ -130,7 +121,7 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="user.png"/>
+        <img id="profile-img" class="profile-img-card" src="car.png"/>
         <p id="profile-name" class="profile-name-card"></p>
         <c:choose>
             <c:when test="${requestScope.msg ne null}">
@@ -141,52 +132,31 @@
                 <hr>
             </c:when>
         </c:choose>
-        <c:choose>
-            <c:when test="${requestScope.manager eq true}">
-                <form class="form-signin" action="adminUsers" method="post">
-                    <span id="reauth-emaill" class="reauth-email"></span>
-                    <input type="text" id="inputLoginn" class="form-control" pattern="([A-Za-z0-9_]+){5,15}"
-                           placeholder="  Login" required autofocus name="login">
-                    <input type="email" id="inputEmaill" class="form-control" placeholder="  Email" required name="email">
-                    <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="inputPasswordd" class="form-control"
-                           placeholder="  Password (5 to 15 characters)" required name="password">
-                    <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="confirmPasswordd" class="form-control"
-                           placeholder="  Confirm password" required name="confirmPassword">
+
+                <form class="form-signin" action="check" method="post">
+                    <label for="price"> Price </label>
+                    <input type="number" class="form-control" required autofocus
+                           name="price" id="price">
+
+                    <label for="comment"> Comment </label>
+                    <textarea class="form-control" rows="6" required name="comment" id="comment">
+                    </textarea><br>
+
+                    <input type="hidden" name="orderId" value="${requestScope.orderId}">
+
                     <hr>
+                    <br>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="register">Register
+                            name="action" value="save">Save
                     </button>
                 </form>
-                <form class="form-signin" action="adminUsers" method="get">
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="back">Back to managers
-                    </button>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form class="form-signin" action="login" method="post">
-                    <span id="reauth-email" class="reauth-email"></span>
-                    <input type="text" id="inputLogin" class="form-control" pattern="([A-Za-z0-9_]+){5,15}"
-                           placeholder="  Login" required autofocus name="login">
-                    <input type="email" id="inputEmail" class="form-control" placeholder="  Email" required name="email">
-                    <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="inputPassword" class="form-control"
-                           placeholder="  Password (5 to 15 characters)" required name="password">
-                    <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="confirmPassword" class="form-control"
-                           placeholder="  Confirm password" required name="confirmPassword">
-                    <hr>
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="register">Register
-                    </button>
-                </form>
-                <form class="form-signin" action="login" method="get">
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="home">Main page
-                    </button>
-                </form>
-            </c:otherwise>
-        </c:choose>
 
     </div>
+    <form class="form-signin" action="carForm" method="post">
+        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                name="action" value="back">Back to cars
+        </button>
+    </form>
 </div>
 
 </html>

@@ -17,4 +17,8 @@ public interface OrderDAO extends GenericDAO<Order> {
     List<Order> getByStatus(String status);
 
     boolean deleteAllByStatus(String status);
+
+    boolean updateStatus(int id, int statusId);
+
+    boolean updateStatusWithComment(int id, int statusId, String comment);
 }

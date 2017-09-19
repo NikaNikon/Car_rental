@@ -193,8 +193,20 @@
                             </form>
                         </div>
                     </c:when>
+                    <c:when test="${sessionScope.user.role eq 'MANAGER'}">
+                        <div style="margin-left: 78%">
+                            <form action="managerServlet" method="get">
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="orders">Orders
+                                </button>
+                                <button type="submit" class="btn btn-success" name="action"
+                                        value="checks">Repairment checks
+                                </button>
+                            </form>
+                        </div>
+                    </c:when>
                     <c:otherwise>
-                        <div style="margin-left: 73%">
+                        <div style="margin-left: 75%">
                             <form action="user" method="get">
                                 <button type="submit" class="btn btn-success" name="action"
                                         value="orders">Orders
@@ -299,7 +311,6 @@
                     <th style="white-space: pre;">Driver price</th>
                     <th>Status</th>
                     <th style="white-space: pre;">Description</th>
-                    <%--<th>Available dates</th>--%>
                     <th></th>
                 </tr>
                 </thead>
@@ -320,7 +331,6 @@
                                 </div>
                             </div>
                         </td>
-                        <%--<td><div><script type="text/javascript">calendar();</script></div></td>--%>
 
 
                         <c:choose>

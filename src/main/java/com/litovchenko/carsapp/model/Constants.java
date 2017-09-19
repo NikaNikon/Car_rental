@@ -67,6 +67,7 @@ public interface Constants {
     String LAST_NAME = "lastName";
     String DATE_OF_BIRTH = "dateOfBirth";
     String PHONE = "phone";
+    String ORDER_ID = "orderId";
     String CHECK_DATE = "date";
     String REPAIRMENT_PRICE = "price";
     String CHECK_COMMENT = "comment";

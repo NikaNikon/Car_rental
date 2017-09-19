@@ -77,4 +77,12 @@ public class UsersServise {
         return isInserted;
     }
 
+    public static User getUser(int id){
+        DAOFactory factory = new MySqlDAOFactory();
+        UserDAO dao = factory.getUserDAO();
+        User user = dao.getById(id);
+        closeDaoFactory(factory);
+        return user;
+    }
+
 }

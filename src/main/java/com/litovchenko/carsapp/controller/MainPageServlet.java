@@ -1,8 +1,10 @@
 package com.litovchenko.carsapp.controller;
 
 import com.litovchenko.carsapp.model.Car;
+import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.CarClassesService;
 import com.litovchenko.carsapp.service.CarsService;
+import com.litovchenko.carsapp.service.OrdersService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -60,6 +62,11 @@ public class MainPageServlet extends HttpServlet {
             }
         }
         req.getSession().setAttribute("cars", list);
+        User user = ((User)(req.getSession().getAttribute("user")));
+        if(user != null) {
+            req.getSession().setAttribute("msg",
+                    OrdersService.checkAbilityToMakeOrders(user));
+        }
 
         req.setAttribute("cars", list);
         req.setAttribute("classes", CarClassesService.getClasses());

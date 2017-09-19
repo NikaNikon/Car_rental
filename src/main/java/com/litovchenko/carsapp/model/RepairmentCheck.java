@@ -15,6 +15,8 @@ public class RepairmentCheck  implements Identified{
     @GeneratedValue
     private int id;
 
+    private int orderId;
+
     @Column(name = USER_ID)
     private int userId;
 
@@ -38,14 +40,24 @@ public class RepairmentCheck  implements Identified{
     public RepairmentCheck() {
     }
 
-    public RepairmentCheck(int id, int userId, int carId, Date date, double price, String comment, Status status) {
+    public RepairmentCheck(int id, int orderId, int userId, int carId, Date date,
+                           double price, String comment, Status status) {
         this.id = id;
+        this.orderId = orderId;
         this.userId = userId;
         this.carId = carId;
         this.date = date;
         this.price = price;
         this.comment = comment;
         this.status = status;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public enum Status {

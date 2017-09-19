@@ -164,4 +164,36 @@ public class MySqlOrderDAO extends MySqlGenericDAO<Order> implements OrderDAO {
         }
         return true;
     }
+
+    @Override
+    public boolean updateStatus(int id, int statusId) {
+        String sql = "UPDATE " + ORDERS + " SET " + ORDER_STATUS_ID + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
+        try(PreparedStatement pstm = con.prepareStatement(sql)){
+            pstm.setInt(1, statusId);
+            pstm.setInt(2, id);
+            if(pstm.executeUpdate()== 1){
+                return true;
+            }
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateStatusWithComment(int id, int statusId, String comment) {
+        String sql = "UPDATE " + ORDERS + " SET " + ORDER_STATUS_ID + EQ_COMA +
+                ORDER_COMMENT + EQ_PARAM+ " WHERE " + ID + EQ_PARAM;
+        try(PreparedStatement pstm = con.prepareStatement(sql)){
+            pstm.setInt(1, statusId);
+            pstm.setString(2, comment);
+            pstm.setInt(3, id);
+            if(pstm.executeUpdate()== 1){
+                return true;
+            }
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
+        return false;
+    }
 }

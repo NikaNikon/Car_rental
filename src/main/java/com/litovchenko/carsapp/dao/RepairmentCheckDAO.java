@@ -12,4 +12,5 @@ public interface RepairmentCheckDAO extends GenericDAO<RepairmentCheck>{
 
     List<RepairmentCheck> getByStatus(RepairmentCheck.Status status);
 
+    RepairmentCheck getByOrderId(int orderId);
 }

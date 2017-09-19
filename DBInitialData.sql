@@ -1,10 +1,8 @@
 INSERT	INTO statuses (status) VALUES
 	  ("NEW"),			#just created order
     ("REJECTED"),		#there are some reasons why order can't be made
-    ("PENDING"),		# manager approved the order and now it's awaiting for payment from the buyer
-    ("PAYED"),			#buyer sent a payment, received payed check
-    ("CANCELED"),		#buyer canceled the order (available only before payment)
-    ("CLOSED");			#car returned
+    ("CONFIRMED"),   #manager confirmed the order
+    ("CLOSED");     #car returned
     
 
 INSERT INTO roles (roleName) VALUES
@@ -76,10 +74,10 @@ VALUES  (5,"Veronika","Yurievna","Litovchenko",'1997-07-07',"+380990372226"),
 INSERT INTO orders (id, userId, carId, startDate, endDate, orderDate, driver, totalPrice, statusId) 
 VALUES  (DEFAULT, 7,3,'2017-09-17','2017-09-25','2017-09-11',1,0, default),
 		(DEFAULT, 8,1,'2017-09-20','2017-09-25','2017-09-11',1,0, default),
-        (DEFAULT, 6,2,'2017-09-10','2017-09-12','2017-09-09',1,0, 6);
+        (DEFAULT, 6,2,'2017-09-10','2017-09-12','2017-09-09',1,0, 4);
     
-INSERT INTO repairment_checks (id, userId, carId, date, price, comment, status) 
-	VALUES (DEFAULT, 6, 2, current_date(), 50, "comment", "UNPAYED"); 
+INSERT INTO repairment_checks (id, orderId, userId, carId, date, price, comment, status)
+	VALUES (DEFAULT, 3, 6, 2, current_date(), 50, "comment", "UNPAYED");
     
     
     

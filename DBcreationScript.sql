@@ -122,6 +122,7 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `repairment_checks` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `orderId` INT(11) UNSIGNED NOT NULL,
   `userId` INT(11) UNSIGNED NOT NULL,
   `carId` INT(11) UNSIGNED NOT NULL,
   `date` DATE NOT NULL,
@@ -150,21 +151,21 @@ CREATE PROCEDURE findByModel
     BEGIN
 		SELECT * FROM cars WHERE model LIKE car_model;
     END //
-    
+
 CREATE PROCEDURE findByClass
 	(IN car_class VARCHAR(20))
     BEGIN
-		SELECT * FROM cars, car_classes 
+		SELECT * FROM cars, car_classes
         WHERE car_classes.id = cars.carClassId AND carClassName LIKE car_class;
     END //
-    
+
 CREATE PROCEDURE findOrdersByStatus (ord_stat VARCHAR(45))
 	BEGIN
 		SELECT * from orders, statuses
         WHERE statuses.id = orders.statusId AND status LIKE ord_stat;
     END //
-    
-CREATE TRIGGER before_car_ordered 
+
+CREATE TRIGGER before_car_ordered
 	BEFORE INSERT ON orders
     FOR EACH ROW
     BEGIN
@@ -175,25 +176,18 @@ CREATE TRIGGER before_car_ordered
 			SET msg = 'This user cannot make orders';
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
         END IF;
-		IF 
-			NEW.startDate <= (SELECT max(endDate) FROM
-							(SELECT endDate FROM orders WHERE carId = NEW.carId) dates)
-		THEN 
-			SET msg = 'Dates are not available';
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
-		ELSE 
+
 			IF
 				NEW.driver = 1
 			THEN
-				SET NEW.totalPrice = (SELECT price+driverPrice FROM cars WHERE id = NEW.carId) * 
+				SET NEW.totalPrice = (SELECT price+driverPrice FROM cars WHERE id = NEW.carId) *
                 (NEW.endDate - NEW.startDate);
-			ELSE 
-				SET NEW.totalPrice = (SELECT price FROM cars WHERE id = NEW.carId) * 
+			ELSE
+				SET NEW.totalPrice = (SELECT price FROM cars WHERE id = NEW.carId) *
                 (NEW.endDate - NEW.startDate);
             END IF;
-		END IF;
     END //
-    
+
     CREATE TRIGGER before_car_deleted
 	BEFORE DELETE ON cars
     FOR EACH ROW
@@ -204,25 +198,25 @@ CREATE TRIGGER before_car_ordered
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
         END IF;
     END //
-    
+
     CREATE TRIGGER change_car_status_before_order
     BEFORE INSERT ON orders
     FOR EACH ROW
     BEGIN
 		UPDATE cars SET cars.status = "IN_RENT" WHERE cars.id = NEW.carId;
     END //
-    
+
     CREATE TRIGGER change_car_status_after_order_updated
     AFTER UPDATE ON orders
     FOR EACH ROW
     BEGIN
 		IF
-			NEW.statusId IN 
+			NEW.statusId IN
             (SELECT id FROM statuses s WHERE s.status LIKE "CLOSED" OR s.status LIKE "REJECTED" OR
             s.status LIKE "EXPIRED" OR s.status LIKE "CANCELED")
-		THEN 
+		THEN
 			UPDATE cars SET cars.status = "AVAILABLE" where cars.id = NEW.carId;
         END IF;
     END //
-    
+
 DELIMITER ;

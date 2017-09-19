@@ -177,7 +177,7 @@
             <tbody>
             <c:forEach items="${requestScope.cars}" var="current">
                 <tr>
-                    <th><img src="car.jpg" style="width:280px;height:173px"></th>
+                    <td><img src="car.jpg" style="width:280px;height:173px"></td>
                     <td><c:out value="${current.carClassName}"/></td>
                     <td><c:out value="${current.fullName}"/></td>
                     <td><c:out value="${current.price}"/></td>

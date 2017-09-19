@@ -130,7 +130,7 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="user.png"/>
+        <img id="profile-img" class="profile-img-card" src="order.png"/>
         <p id="profile-name" class="profile-name-card"></p>
 
 
@@ -160,14 +160,17 @@
                 </c:when>
                 <c:otherwise>
                     <c:set var="passport" value="${sessionScope.user.passportData}"></c:set>
-                    <input class="form-control" type="text" name="name" disabled value="${passport.firstName}">
-                    <input class="form-control" type="text" name="middleName" disabled
+                    <input class="form-control" type="text" name="name" readonly
+                           value="${passport.firstName}">
+                    <input class="form-control" type="text" name="middleName" readonly
                            value="${passport.middleName}">
-                    <input class="form-control" type="text" name="lastName" disabled
+                    <input class="form-control" type="text" name="lastName" readonly
                            value="${passport.lastName}">
-                    <input type="date" class="form-control" name="dateOfBirth" disabled value="${requestScope.birthday}">
+                    <input class="form-control" type="text" name="dateOfBirth" readonly
+                           value="${requestScope.birthday}">
                     <br>
-                    <input class="form-control" type="text" name="phone" disabled value="${passport.phone}">
+                    <input class="form-control" type="text" name="phone" readonly
+                           value="${passport.phone}">
                     <div class="alert alert-info">
                         <strong>Info!</strong> If you want to change your passport data, you can do it
                         in your profile before making order.

@@ -10,9 +10,10 @@
 
     <style>
 
+
         .card-container.card {
-            width: 700px;
-            min-height: 950px;
+            max-width: 400px;
+            min-height: 450px;
             padding: 40px 40px;
         }
 
@@ -60,12 +61,6 @@
             -moz-box-sizing: border-box;
             -webkit-box-sizing: border-box;
             box-sizing: border-box;
-        }
-
-        .form-signin {
-            direction: ltr;
-            height: 44px;
-            font-size: 16px;
         }
 
         .form-signin input[type=text],
@@ -121,6 +116,7 @@
 
 <div class="container">
     <div class="card card-container">
+
         <img id="profile-img" class="profile-img-card" src="car.png"/>
         <p id="profile-name" class="profile-name-card"></p>
         <c:choose>
@@ -132,11 +128,11 @@
                 <hr>
             </c:when>
         </c:choose>
-
-        <c:set var="car" value="${requestScope.car}"></c:set>
-        <c:choose>
-            <c:when test="${car ne null}">
-                <form class="form-signin" action="carForm" method="post">
+        <form class="form-signin" action="carForm" method="post">
+            <span id="reauth-email" class="reauth-email"></span>
+            <c:set var="car" value="${requestScope.car}"></c:set>
+            <c:choose>
+                <c:when test="${car ne null}">
                     <label for="modell"> Model </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
                            required autofocus name="model" id="modell" value="${car.model}">
@@ -200,10 +196,8 @@
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
                             name="action" value="update">Save
                     </button>
-                </form>
-            </c:when>
-            <c:otherwise>
-                <form class="form-signin" action="carForm" method="post">
+                </c:when>
+                <c:otherwise>
                     <label for="model"> Model </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
                            required autofocus name="model" id="model">
@@ -242,15 +236,16 @@
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
                             name="action" value="save">Save
                     </button>
-                </form>
-            </c:otherwise>
-        </c:choose>
+                </c:otherwise>
+            </c:choose>
+        </form>
+        <form action="carForm" method="post">
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                    name="action" value="back">Back to cars
+            </button>
+        </form>
     </div>
-    <form class="form-signin" action="carForm" method="post">
-        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                name="action" value="back">Back to cars
-        </button>
-    </form>
 </div>
 
 </html>
+

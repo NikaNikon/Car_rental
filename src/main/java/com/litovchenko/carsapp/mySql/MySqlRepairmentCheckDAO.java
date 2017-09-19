@@ -29,13 +29,13 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
         SQL_SELECT_QUERY = SELECT_BY_TEMPLATE + ID + EQ_PARAM;
         SQL_DELETE_QUERY = "DELETE FROM " + REPAIRMENT_CHECKS + " WHERE " + ID + EQ_PARAM;
 
-        SQL_INSERT_QUERY = "INSERT INTO " + REPAIRMENT_CHECKS + "(" + ID + COMA + USER_ID + COMA +
-                CAR_ID + COMA + CHECK_DATE + COMA + REPAIRMENT_PRICE + COMA + CHECK_COMMENT + COMA +
-                CHECK_STATUS + ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
+        SQL_INSERT_QUERY = "INSERT INTO " + REPAIRMENT_CHECKS + "(" + ID + COMA + ORDER_ID + COMA +
+                USER_ID + COMA + CAR_ID + COMA + CHECK_DATE + COMA + REPAIRMENT_PRICE + COMA +
+                CHECK_COMMENT + COMA + CHECK_STATUS + ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
 
-        SQL_UPDATE_QUERY = "UPDATE " + REPAIRMENT_CHECKS + " SET " + USER_ID + EQ_COMA + CAR_ID + EQ_COMA +
-                CHECK_DATE + EQ_COMA + REPAIRMENT_PRICE + EQ_COMA + CHECK_COMMENT + EQ_COMA +
-                CHECK_STATUS + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
+        SQL_UPDATE_QUERY = "UPDATE " + REPAIRMENT_CHECKS + " SET " + ORDER_ID + EQ_COMA + USER_ID +
+                EQ_COMA + CAR_ID + EQ_COMA + CHECK_DATE + EQ_COMA + REPAIRMENT_PRICE + EQ_COMA +
+                CHECK_COMMENT + EQ_COMA + CHECK_STATUS + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
 
 
     }
@@ -100,9 +100,10 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
             while (rs.next()) {
                 MySqlCarDAO carDAO = new MySqlCarDAO(con);
                 MySqlUserDAO userDAO = new MySqlUserDAO(con);
-                RepairmentCheck check = new RepairmentCheck(rs.getInt(ID), rs.getInt(USER_ID),
-                        rs.getInt(CAR_ID), rs.getDate(CHECK_DATE), rs.getDouble(REPAIRMENT_PRICE),
-                        rs.getString(CHECK_COMMENT), RepairmentCheck.Status.valueOf(rs.getString(CHECK_STATUS)));
+                RepairmentCheck check = new RepairmentCheck(rs.getInt(ID), rs.getInt(ORDER_ID),
+                        rs.getInt(USER_ID), rs.getInt(CAR_ID), rs.getDate(CHECK_DATE),
+                        rs.getDouble(REPAIRMENT_PRICE), rs.getString(CHECK_COMMENT),
+                        RepairmentCheck.Status.valueOf(rs.getString(CHECK_STATUS)));
                 check.setCarName(carDAO.getById(rs.getInt(CAR_ID)).getFullName());
                 check.setUserLogin(userDAO.getById(rs.getInt(USER_ID)).getLogin());
                 list.add(check);
@@ -119,12 +120,13 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     @Override
     protected void prepareStatementForInsert(PreparedStatement st, RepairmentCheck object) {
         try {
-            st.setInt(1, object.getUserId());
-            st.setInt(2, object.getCarId());
-            st.setDate(3, object.getDate());
-            st.setDouble(4, object.getPrice());
-            st.setString(5, object.getComment());
-            st.setString(6, object.getStatus().toString());
+            st.setInt(1, object.getOrderId());
+            st.setInt(2, object.getUserId());
+            st.setInt(3, object.getCarId());
+            st.setDate(4, object.getDate());
+            st.setDouble(5, object.getPrice());
+            st.setString(6, object.getComment());
+            st.setString(7, object.getStatus().toString());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -134,10 +136,24 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     protected void prepareStatementForUpdate(PreparedStatement st, RepairmentCheck object) {
         try {
             prepareStatementForInsert(st, object);
-            st.setInt(7, object.getId());
+            st.setInt(8, object.getId());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
 
+    }
+
+    @Override
+    public RepairmentCheck getByOrderId(int orderId) {
+        String sql = "SELECT * FROM " + REPAIRMENT_CHECKS + " WHERE " + ORDER_ID + EQ_PARAM;
+        try(PreparedStatement pstm = con.prepareStatement(sql)){
+            pstm.setInt(1, orderId);
+            if(parseResultSet(pstm.executeQuery()) == null){
+                return null;
+            }
+            return parseResultSet(pstm.executeQuery()).get(0);
+        } catch (SQLException e){
+            throw new PersistenceException(e);
+        }
     }
 }
