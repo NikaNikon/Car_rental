@@ -1,6 +1,7 @@
 package com.litovchenko.carsapp.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
@@ -8,7 +9,7 @@ import static com.litovchenko.carsapp.model.Constants.*;
 
 @Entity
 @Table(name = PASSPORT_DATA)
-public class PassportData implements Identified {
+public class PassportData implements Identified, Serializable {
 
     private int userId;
 

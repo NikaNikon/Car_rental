@@ -8,21 +8,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/managerServlet")
-public class ManagerServlet extends HttpServlet{
+public class ManagerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action == null){
+        if (action == null) {
             resp.sendRedirect("/MainPageServlet");
         }
-        switch(action){
+        switch (action) {
             case "orders": {
                 resp.sendRedirect("/orders");
                 break;
             }
             case "checks": {
-
+                resp.sendRedirect("/check");
                 break;
             }
         }

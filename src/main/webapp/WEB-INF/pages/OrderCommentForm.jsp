@@ -6,13 +6,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
 
+
         .card-container.card {
-            width: 500px;
-            min-height: 550px;
+            max-width: 400px;
+            min-height: 450px;
             padding: 40px 40px;
         }
 
@@ -62,11 +63,6 @@
             box-sizing: border-box;
         }
 
-        .form-signin {
-            direction: ltr;
-            height: 44px;
-            font-size: 16px;
-        }
 
         .form-signin input[type=text],
         .form-signin button {
@@ -121,42 +117,29 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="car.png"/>
+        <img id="profile-img" class="profile-img-card" src="../../img/order.png"/>
         <p id="profile-name" class="profile-name-card"></p>
-        <c:choose>
-            <c:when test="${requestScope.msg ne null}">
-                <hr>
-                <div class="alert alert-danger">
-                    <strong>Oops! </strong>${requestScope.msg} Please, try again.
-                </div>
-                <hr>
-            </c:when>
-        </c:choose>
 
-                <form class="form-signin" action="check" method="post">
-                    <label for="price"> Price </label>
-                    <input type="number" class="form-control" required autofocus
-                           name="price" id="price">
+        <form class="form-signin" action="orders" method="post">
+            <span id="reauth-email" class="reauth-email"></span>
 
-                    <label for="comment"> Comment </label>
-                    <textarea class="form-control" rows="6" required name="comment" id="comment">
-                    </textarea><br>
+            <label for="comment"> Comment </label>
+            <textarea class="form-control" rows="6" required name="comment" id="comment"></textarea><br>
+            <hr>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                    name="action" value="${requestScope.action}">Save
+            </button>
+        </form>
 
-                    <input type="hidden" name="orderId" value="${requestScope.orderId}">
 
-                    <hr>
-                    <br>
-                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="save">Save
-                    </button>
-                </form>
+        <form action="orders" method="get">
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                    name="action" value="back">Back to orders
+            </button>
+        </form>
 
     </div>
-    <form class="form-signin" action="carForm" method="post">
-        <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                name="action" value="back">Back to cars
-        </button>
-    </form>
 </div>
 
 </html>
+

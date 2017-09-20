@@ -1,6 +1,5 @@
 package com.litovchenko.carsapp.controller;
 
-import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.LoginService;
 import com.litovchenko.carsapp.service.UsersServise;
 
@@ -20,15 +19,15 @@ public class AdminUsersServlet extends HttpServlet {
         if (action != null) {
             if ("newManager".equals(action)) {
                 req.setAttribute("manager", true);
-                req.getRequestDispatcher("Registration.jsp").forward(req, resp);
+                req.getRequestDispatcher("WEB-INF/pages/Registration.jsp").forward(req, resp);
             }
-            if("users".equals(action)){
+            if ("users".equals(action)) {
                 req.setAttribute("users", UsersServise.getCustomers());
-                req.getRequestDispatcher("AdminUsers.jsp").forward(req, resp);
+                req.getRequestDispatcher("WEB-INF/pages/AdminUsers.jsp").forward(req, resp);
             }
         }
         req.setAttribute("managers", UsersServise.getManagers());
-        req.getRequestDispatcher("AdminManagers.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/pages/AdminManagers.jsp").forward(req, resp);
     }
 
     @Override
@@ -41,7 +40,7 @@ public class AdminUsersServlet extends HttpServlet {
                 int id = Integer.parseInt(action.split("_")[1]);
                 if (action.startsWith("block") || action.startsWith("userBlock")) {
                     if (UsersServise.changeBlockedStatus(true, id)) {
-                        if(action.startsWith("userBlock")){
+                        if (action.startsWith("userBlock")) {
                             resp.sendRedirect("/adminUsers?action=users");
                         } else {
                             resp.sendRedirect("/adminUsers");
@@ -49,7 +48,7 @@ public class AdminUsersServlet extends HttpServlet {
                     }
                 } else if (action.startsWith("unblock") || action.startsWith("userUnblock")) {
                     if ((UsersServise.changeBlockedStatus(false, id))) {
-                        if(action.startsWith("userUnblock")){
+                        if (action.startsWith("userUnblock")) {
                             resp.sendRedirect("/adminUsers?action=users");
                         } else {
                             resp.sendRedirect("/adminUsers");
@@ -78,7 +77,7 @@ public class AdminUsersServlet extends HttpServlet {
                     default: {
                         req.setAttribute("manager", true);
                         req.setAttribute("msg", validation);
-                        req.getRequestDispatcher("Registration.jsp").forward(req, resp);
+                        req.getRequestDispatcher("WEB-INF/pages/Registration.jsp").forward(req, resp);
 
                         break;
                     }

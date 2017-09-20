@@ -27,7 +27,7 @@ public class CarFormServlet extends HttpServlet {
 
         req.setAttribute("classes", CarClassesService.getAll());
         req.setAttribute("statuses", CarsService.getStatuses());
-        req.getRequestDispatcher("CarDataForm.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/pages/CarDataForm.jsp").forward(req, resp);
     }
 
     @Override
@@ -43,19 +43,19 @@ public class CarFormServlet extends HttpServlet {
                 resp.sendRedirect("ErrPage.jsp");
             }
         } else if ("update".equals(req.getParameter("action"))) {
-            Car car = (Car)req.getSession().getAttribute("car");
+            Car car = (Car) req.getSession().getAttribute("car");
             boolean isUpdated = CarsService.update(car.getId(), req.getParameter("model"),
                     req.getParameter("carClass"), req.getParameter("price"),
                     req.getParameter("fullName"), req.getParameter("description"),
                     Car.Status.valueOf(req.getParameter("status")), req.getParameter("driverPrice"));
-            if(isUpdated){
+            if (isUpdated) {
                 req.getSession().removeAttribute("car");
                 resp.sendRedirect("/admin?action=cars");
             } else {
                 req.getSession().removeAttribute("car");
                 resp.sendRedirect("ErrPage.jsp");
             }
-        } else if("back".equals(req.getParameter("action"))){
+        } else if ("back".equals(req.getParameter("action"))) {
             resp.sendRedirect("/admin?action=cars");
         }
 

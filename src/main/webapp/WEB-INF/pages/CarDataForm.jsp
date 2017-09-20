@@ -6,7 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
 
@@ -117,7 +117,7 @@
 <div class="container">
     <div class="card card-container">
 
-        <img id="profile-img" class="profile-img-card" src="car.png"/>
+        <img id="profile-img" class="profile-img-card" src="../../img/car.png"/>
         <p id="profile-name" class="profile-name-card"></p>
         <c:choose>
             <c:when test="${requestScope.msg ne null}">

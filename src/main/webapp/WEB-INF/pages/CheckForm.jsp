@@ -6,7 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
 
@@ -48,7 +48,7 @@
             min-height: 1em;
         }
 
-        .reauth-email {
+        .reauth-email .reauth-emaill {
             display: block;
             color: #404040;
             line-height: 2;
@@ -63,7 +63,21 @@
             box-sizing: border-box;
         }
 
+        .form-signin #inputLogin,
+        .form-signin #inputPassword
+        .form-signin #confirmPassword
+        .form-signin #confirmPasswordd
+        .form-signin #inputLoginn
+        .form-signin #inputPasswordd
+        .form-signin #inputEmaill
+        .form-signin #inputEmail{
+            direction: ltr;
+            height: 44px;
+            font-size: 16px;
+        }
 
+        .form-signin input[type=email],
+        .form-signin input[type=password],
         .form-signin input[type=text],
         .form-signin button {
             width: 100%;
@@ -109,7 +123,6 @@
             -webkit-appearance: none;
             margin: 0;
         }
-
     </style>
 
 </head>
@@ -117,29 +130,42 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="order.png"/>
+        <img id="profile-img" class="profile-img-card" src="../../img/user.png"/>
         <p id="profile-name" class="profile-name-card"></p>
+        <c:choose>
+            <c:when test="${requestScope.msg ne null}">
+                <hr>
+                <div class="alert alert-danger">
+                    <strong>Oops! </strong>${requestScope.msg} Please, try again.
+                </div>
+                <hr>
+            </c:when>
+        </c:choose>
 
-        <form class="form-signin" action="orders" method="post">
-            <span id="reauth-email" class="reauth-email"></span>
+                <form class="form-signin" action="check" method="post">
+                    <span id="reauth-email" class="reauth-email"></span>
+                    <label for="price"> Price </label>
+                    <input type="number" class="form-control" required autofocus
+                           name="price" id="price">
 
-            <label for="comment"> Comment </label>
-            <textarea class="form-control" rows="6" required name="comment" id="comment"></textarea><br>
-            <hr>
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="${requestScope.action}">Save
-            </button>
-        </form>
+                    <label for="comment"> Comment </label>
+                    <textarea class="form-control" rows="6" required name="comment" id="comment"></textarea><br>
 
+                    <input type="hidden" name="orderId" value="${requestScope.orderId}">
 
-        <form action="orders" method="get">
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="back">Back to orders
-            </button>
-        </form>
+                    <hr>
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                            name="action" value="save">Save
+                    </button>
+                </form>
+
+                <form class="form-signin" action="carForm" method="post">
+                    <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
+                            name="action" value="back">Back to cars
+                    </button>
+                </form>
 
     </div>
 </div>
 
 </html>
-

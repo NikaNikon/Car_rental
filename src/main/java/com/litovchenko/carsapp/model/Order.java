@@ -166,7 +166,7 @@ public class Order implements Identified {
     public String toString() {
         StringBuilder order = new StringBuilder();
         String line_sep = System.lineSeparator();
-        order.append("Order_id: " + id + line_sep);
+        order.append("Order # " + id + line_sep);
         if (userLogin != null) {
             order.append("User: " + userLogin + line_sep);
         } else {
@@ -187,7 +187,7 @@ public class Order implements Identified {
         order.append("__________________________________________" + line_sep);
         order.append("Total price: " + totalPrice + line_sep).append(orderDate + line_sep);
         if (status != null) {
-            order.append("Order status: " + status);
+            order.append("Status: " + status);
         }
         if (managerComment != null) {
             order.append("Manager comment: " + managerComment + line_sep);

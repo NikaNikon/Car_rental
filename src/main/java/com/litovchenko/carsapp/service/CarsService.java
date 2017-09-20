@@ -174,6 +174,10 @@ public class CarsService {
         car.setStatus(newStatus);
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
+        if(!dao.getById(car.getId()).getStatus().equals(Car.Status.AVAILABLE)){
+            closeFactory(factory);
+            return false;
+        }
         boolean ifUpdated = dao.update(car);
         closeFactory(factory);
         return ifUpdated;

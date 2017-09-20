@@ -8,18 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/user")
-public class UserServlet extends HttpServlet{
+public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(req.getParameter("action") != null){
-            switch(req.getParameter("action")){
-                case "orders":{
+        if (req.getParameter("action") != null) {
+            switch (req.getParameter("action")) {
+                case "orders": {
                     resp.sendRedirect("/orders");
                     break;
                 }
                 case "checks": {
-
+                    resp.sendRedirect("/check");
                     break;
                 }
                 case "personalPage": {
@@ -28,10 +28,5 @@ public class UserServlet extends HttpServlet{
                 }
             }
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
     }
 }

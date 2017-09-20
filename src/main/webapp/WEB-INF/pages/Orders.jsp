@@ -5,7 +5,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         #container {
             padding-left: 40px;
@@ -156,13 +156,13 @@
 <div id="container">
     <main id="center" class="column">
         <article>
+            <h1>Orders</h1>
                 <c:choose>
                     <c:when test="${requestScope.msg ne null}">
                         <div class="alert alert-danger">
                             <strong>WARNING!</strong> Repairment check is already registered for this order!
                         </div>
                     </c:when>
-                    <c:otherwise><h1></h1></c:otherwise>
                 </c:choose>
         </article>
     </main>
@@ -209,7 +209,7 @@
             <tbody>
             <c:forEach items="${requestScope.orders}" var="order">
                 <tr>
-                    <td><img src="order.png" style="width: 120px; height: 120px"></td>
+                    <td><img src="../../img/order.png" style="width: 120px; height: 120px"></td>
                     <td>${order.key.carId}</td>
                     <td>${order.key.userId}</td>
                     <td>${order.key.startDate}</td>
@@ -309,7 +309,7 @@
                             <tbody>
                             <c:forEach items="${requestScope.orders}" var="order">
                                 <tr>
-                                    <td><img src="order.png" style="width: 120px; height: 120px"></td>
+                                    <td><img src="../../img/order.png" style="width: 120px; height: 120px"></td>
                                     <td>${order.key.carId}</td>
                                     <td>${order.key.startDate}</td>
                                     <td>${order.key.endDate}</td>
@@ -340,6 +340,18 @@
                                         <c:otherwise>
                                             <td></td>
                                         </c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${order.value eq 'CONFIRMED'}">
+                                            <td>
+                                                <form action="orders" method="get">
+                                                <button class="btn btn-success" type="submit"
+                                                        name="action"
+                                                        value="getCheck_${order.key.id}">Get a check
+                                                </button>
+                                                </form>
+                                            </td>
+                                        </c:when>
                                     </c:choose>
 
                                 </tr>

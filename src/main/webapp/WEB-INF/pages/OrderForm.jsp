@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/pickaday.css">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/pickaday.css">
 
     <style>
 
@@ -130,7 +130,7 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="order.png"/>
+        <img id="profile-img" class="profile-img-card" src="../../img/order.png"/>
         <p id="profile-name" class="profile-name-card"></p>
 
 
@@ -198,8 +198,8 @@
             </div>
 
 
-            <script src="js/moment.min.js"></script>
-            <script src="js/pickaday.js"></script>
+            <script src="../../js/moment.min.js"></script>
+            <script src="../../js/pickaday.js"></script>
             <script>
 
                 var startDate,

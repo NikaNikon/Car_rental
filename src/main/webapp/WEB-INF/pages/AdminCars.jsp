@@ -5,7 +5,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         #container {
             padding-left: 40px;
@@ -177,7 +177,7 @@
             <tbody>
             <c:forEach items="${requestScope.cars}" var="current">
                 <tr>
-                    <td><img src="car.jpg" style="width:280px;height:173px"></td>
+                    <td><img src="../../img/car.jpg" style="width:280px;height:173px"></td>
                     <td><c:out value="${current.carClassName}"/></td>
                     <td><c:out value="${current.fullName}"/></td>
                     <td><c:out value="${current.price}"/></td>

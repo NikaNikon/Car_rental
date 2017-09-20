@@ -62,8 +62,8 @@ public class MainPageServlet extends HttpServlet {
             }
         }
         req.getSession().setAttribute("cars", list);
-        User user = ((User)(req.getSession().getAttribute("user")));
-        if(user != null) {
+        User user = ((User) (req.getSession().getAttribute("user")));
+        if (user != null) {
             req.getSession().setAttribute("msg",
                     OrdersService.checkAbilityToMakeOrders(user));
         }
@@ -71,6 +71,6 @@ public class MainPageServlet extends HttpServlet {
         req.setAttribute("cars", list);
         req.setAttribute("classes", CarClassesService.getClasses());
         req.setAttribute("models", CarsService.getModels());
-        req.getRequestDispatcher("Main Page.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/pages/Main Page.jsp").forward(req, resp);
     }
 }

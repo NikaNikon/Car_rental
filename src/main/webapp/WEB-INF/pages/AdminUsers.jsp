@@ -5,7 +5,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car rental</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
         #container {
             padding-left: 40px;
@@ -78,12 +78,6 @@
 
     </style>
 
-    <script type="text/javascript">
-        function ensure() {
-            return confirm("Are you sure?");
-        }
-    </script>
-
 </head>
 <body>
 <header id="header">
@@ -108,7 +102,7 @@
                         value="users">Users
                 </button>
                 <button type="submit" class="btn btn-success" name="action"
-                        value="manager">New manager
+                        value="managers">Managers
                 </button>
             </form>
         </div>
@@ -121,14 +115,6 @@
             <h1></h1>
         </article>
     </main>
-
-    <div>
-        <form action="adminUsers" method="get">
-            <button class="btn btn-success" type="submit" name="action"
-                    value="newManager"> + Register new manager
-            </button>
-        </form>
-    </div>
 
     <div id="right" class="column">
 
@@ -144,9 +130,9 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${requestScope.managers}" var="current">
+            <c:forEach items="${requestScope.users}" var="current">
                 <tr>
-                    <th><img src="admin.png" style="width: 100px; height: 100px;"></th>
+                    <th><img src="../../img/user.png" style="width:80px; height:80px"></th>
                     <td><c:out value="${current.login}"/></td>
                     <td><c:out value="${current.role}"/></td>
                     <td><c:out value="${current.email}"/></td>
@@ -164,21 +150,15 @@
                             <c:choose>
                                 <c:when test="${current.blocked eq true}">
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="unblock_${current.id}"> Unblock
+                                            value="userUnblock_${current.id}"> Unblock
                                     </button>
                                 </c:when>
                                 <c:otherwise>
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="block_${current.id}"> Block
+                                            value="userBlock_${current.id}"> Block
                                     </button>
                                 </c:otherwise>
                             </c:choose>
-                        </form>
-                        <br>
-                        <form onsubmit="ensure();" action="adminUsers" method="post">
-                            <button class="btn btn-success" type="submit" name="action"
-                                    value="delete_${current.id}"> Delete
-                            </button>
                         </form>
                     </td>
                 </tr>

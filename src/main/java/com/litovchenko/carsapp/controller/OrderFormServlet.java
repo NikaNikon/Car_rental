@@ -35,7 +35,7 @@ public class OrderFormServlet extends HttpServlet {
                 req.setAttribute("maxDateOfBirth", OrdersService.getMaxDateOfBirth());
                 req.setAttribute("minStartDate", OrdersService.getDaysAfterToday(1));
                 req.setAttribute("maxStartDate", OrdersService.getDaysAfterToday(3));
-                req.getRequestDispatcher("OrderForm.jsp").forward(req, resp);
+                req.getRequestDispatcher("WEB-INF/pages/OrderForm.jsp").forward(req, resp);
             }
         }
 
@@ -52,7 +52,7 @@ public class OrderFormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if ("makeOrder".equals(req.getParameter("action"))) {
             boolean driver = "on".equals(req.getParameter("driver"));
-           CarsService.changeStatus(CarsService.getById(req.getParameter("carId")),
+            CarsService.changeStatus(CarsService.getById(req.getParameter("carId")),
                     Car.Status.IN_RENT);
 
             if (!OrdersService.makeOrder(req.getParameter("name"), req.getParameter("middleName"),
@@ -67,7 +67,7 @@ public class OrderFormServlet extends HttpServlet {
             } else {
                 req.getSession().setAttribute("cars", null);
                 req.getSession().setAttribute("user",
-                        UsersServise.getUser(((User)(req.getSession().getAttribute("user"))).getId()));
+                        UsersServise.getUser(((User) (req.getSession().getAttribute("user"))).getId()));
                 resp.sendRedirect("OrderSuccess.jsp");
             }
         }

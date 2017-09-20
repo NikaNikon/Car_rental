@@ -149,6 +149,7 @@ public class RepairmentCheck  implements Identified{
         if (comment != null) {
             check.append("Comment: " + comment + line_sep);
         }
+        check.append(status+ line_sep);
         return check.toString();
     }
 }
