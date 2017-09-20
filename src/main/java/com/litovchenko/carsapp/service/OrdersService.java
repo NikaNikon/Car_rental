@@ -11,12 +11,17 @@ import com.litovchenko.carsapp.model.PassportData;
 import com.litovchenko.carsapp.model.RepairmentCheck;
 import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.mySql.MySqlDAOFactory;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class OrdersService {
 
@@ -168,119 +173,63 @@ public class OrdersService {
         return result;
     }
 
-    public static Map<Order, String> getOrders(int userId) {
-        Map<Order, String> map = new HashMap<>();
+    public static List<OrderInfo> getOrders(int userId) {
         DAOFactory factory = new MySqlDAOFactory();
-        OrderDAO dao = factory.getOrderDAO();
+        OrderDAO orderDAO = factory.getOrderDAO();
         StatusDAO statusDAO = factory.getStatusDAO();
-        if(dao.getByUserId(userId) == null){
-            map = null;
+        CarDAO carDAO = factory.getCarDAO();
+        UserDAO userDAO = factory.getUserDAO();
+        List<Order> orders;
+        if (userId < 0) {
+            orders = orderDAO.getAll();
         } else {
-            for (Order order : dao.getByUserId(userId)) {
-                map.put(order, statusDAO.getById(order.getStatusId()).getStatus());
-            }
-            if (map.isEmpty()) {
-                map = null;
-            }
+            orders = orderDAO.getByUserId(userId);
         }
-        closeFactory(factory);
-        return map;
-    }
-
-    public static Map<Order, String> getOrders() {
-        DAOFactory factory = new MySqlDAOFactory();
-        OrderDAO dao = factory.getOrderDAO();
-        StatusDAO statusDAO = factory.getStatusDAO();
-        Map<Order, String> map = new HashMap<>();
-        if(dao.getAll() == null){
-            map = null;
-        } else {
-            for (Order order : dao.getAll()) {
-                map.put(order, statusDAO.getById(order.getStatusId()).getStatus());
-            }
-            if (map.isEmpty()) {
-                map = null;
-            }
-        }
-        closeFactory(factory);
-        return map;
-    }
-
-    public static Map<Order, String> getActiveOrders(Map<Order, String> orders) {
-        Map<Order, String> map = new HashMap<>();
         if (orders == null) {
-            map = null;
-        } else {
-            for (Map.Entry<Order, String> entry : orders.entrySet()) {
-                Order order = entry.getKey();
-                if ("CONFIRMED".equals(order.getStatus())) {
-                    map.put(order, entry.getValue());
-                }
-            }
-            if (map.isEmpty()) {
-                map = null;
-            }
+            closeFactory(factory);
+            return null;
         }
-        return map;
-    }
-
-    public static Map<Order, String> getClosedOrders(Map<Order, String> orders) {
-        Map<Order, String> map = new HashMap<>();
-        if (orders == null) {
-            map = null;
-        } else {
-            for (Map.Entry<Order, String> entry : orders.entrySet()) {
-                Order order = entry.getKey();
-                if ("CLOSED".equals(order.getStatus()) || "REJECTED".equals(order.getStatus())) {
-                    map.put(order, entry.getValue());
-                }
-            }
-            if (map.isEmpty()) {
-                map = null;
-            }
-        }
-        return map;
-    }
-
-    public static Map<Order, String> getNewOrders() {
-        Map<Order, String> map = new HashMap<>();
-        DAOFactory factory = new MySqlDAOFactory();
-        OrderDAO dao = factory.getOrderDAO();
-        StatusDAO statusDAO = factory.getStatusDAO();
-        if (dao.getByStatus("NEW") == null) {
-            map = null;
-        } else {
-            for (Order order : dao.getByStatus("NEW")) {
-                map.put(order, statusDAO.getById(order.getStatusId()).getStatus());
-            }
-            if (map.isEmpty()) {
-                map = null;
-            }
+        List<OrderInfo> list = new ArrayList<>();
+        for (Order order : orders) {
+            OrderInfo orderInfo = new OrderInfo(order, carDAO.getById(order.getCarId()),
+                    userDAO.getById(order.getUserId()),
+                    statusDAO.getById(order.getStatusId()).getStatus());
+            list.add(orderInfo);
         }
         closeFactory(factory);
-        return map;
+        return list;
     }
 
-    public static Map<Order, String> getNewOrders(int id) {
-        Map<Order, String> map = new HashMap<>();
-        DAOFactory factory = new MySqlDAOFactory();
-        OrderDAO dao = factory.getOrderDAO();
-        StatusDAO statusDAO = factory.getStatusDAO();
-        int newStatusId = statusDAO.getByName("NEW").getId();
-        if (dao.getByUserId(id) == null) {
-            map = null;
-        } else {
-            for (Order order : dao.getByUserId(id)) {
-                if (order.getStatusId() == newStatusId) {
-                    map.put(order, "NEW");
-                }
-            }
-            if (map.isEmpty()) {
-                map = null;
+    public static List<OrderInfo> getOrders() {
+        return getOrders(-1);
+    }
+
+    public static List<OrderInfo> getByStatus(List<OrderInfo> orders, String status) {
+        if (orders == null || status == null) {
+            return null;
+        }
+        List<OrderInfo> list = new ArrayList<>();
+        for (OrderInfo info : orders) {
+            if (status.equals(info.getStatus())) {
+                list.add(info);
             }
         }
-        closeFactory(factory);
-        return map;
+        if (list.isEmpty()) {
+            list = null;
+        }
+        return list;
+    }
+
+    public static List<OrderInfo> getActiveOrders(List<OrderInfo> orders) {
+        return getByStatus(orders, "CONFIRMED");
+    }
+
+    public static List<OrderInfo> getClosedOrders(List<OrderInfo> orders) {
+        return getByStatus(orders, "CLOSED");
+    }
+
+    public static List<OrderInfo> getNewOrders(List<OrderInfo> orders) {
+        return getByStatus(orders, "NEW");
     }
 
     private static boolean changeStatus(int id, String status) {
@@ -332,7 +281,7 @@ public class OrdersService {
         byte[] bytes = null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
-        File file = new File("orderCheck.pdf");
+        File file = new File(orderId + "orderCheck.pdf");
         file.delete();
         try {
             PdfWriter.getInstance(doc, byteArrayOutputStream);
@@ -343,6 +292,7 @@ public class OrdersService {
         } catch (DocumentException e) {
             System.out.println("Cannot process document to generate a check" + e);
         }
+        file.delete();
 
         return bytes;
     }

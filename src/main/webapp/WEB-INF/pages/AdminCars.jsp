@@ -117,8 +117,7 @@
 <body>
 <header id="header">
     <form action="MainPageServlet" method="get">
-        <button class="btn-link">The best car rental company</button>
-        <hr>
+        <button class="btn-link">"Wheels" rental service</button>
     </form>
     <div>
         <div style="margin-left: 75%">
@@ -165,6 +164,7 @@
             <thead class="thead-inverse">
             <tr>
                 <th></th>
+                <th>License plate</th>
                 <th>Class</th>
                 <th style="white-space: pre;">Full name</th>
                 <th style="white-space: pre;">Price</th>
@@ -178,6 +178,7 @@
             <c:forEach items="${requestScope.cars}" var="current">
                 <tr>
                     <td><img src="../../img/car.jpg" style="width:280px;height:173px"></td>
+                    <td><c:out value="${current.licensePlate}"/></td>
                     <td><c:out value="${current.carClassName}"/></td>
                     <td><c:out value="${current.fullName}"/></td>
                     <td><c:out value="${current.price}"/></td>

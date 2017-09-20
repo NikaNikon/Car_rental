@@ -111,8 +111,7 @@
 <body>
 <header id="header">
     <form action="MainPageServlet" method="get">
-        <button class="btn-link">The best car rental company</button>
-        <hr>
+        <button class="btn-link">"Wheels" rental service</button>
     </form>
     <div>
         <div style="margin-left: 75%">
@@ -157,13 +156,13 @@
     <main id="center" class="column">
         <article>
             <h1>Orders</h1>
-                <c:choose>
-                    <c:when test="${requestScope.msg ne null}">
-                        <div class="alert alert-danger">
-                            <strong>WARNING!</strong> Repairment check is already registered for this order!
-                        </div>
-                    </c:when>
-                </c:choose>
+            <c:choose>
+                <c:when test="${requestScope.msg ne null}">
+                    <div class="alert alert-danger">
+                        <strong>WARNING!</strong> Repairment check is already registered for this order!
+                    </div>
+                </c:when>
+            </c:choose>
         </article>
     </main>
     <c:choose>
@@ -194,8 +193,8 @@
             <thead class="thead-inverse">
             <tr>
                 <th></th>
-                <th>Car id</th>
-                <th>User id</th>
+                <th>License plate</th>
+                <th>User</th>
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Order date</th>
@@ -207,17 +206,31 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${requestScope.orders}" var="order">
+            <c:forEach items="${requestScope.orders}" var="orderInfo">
                 <tr>
-                    <td><img src="../../img/order.png" style="width: 120px; height: 120px"></td>
-                    <td>${order.key.carId}</td>
-                    <td>${order.key.userId}</td>
-                    <td>${order.key.startDate}</td>
-                    <td>${order.key.endDate}</td>
-                    <td>${order.key.orderDate}</td>
+                    <td><img src="../../img/order.png"></td>
+                    <td>${orderInfo.car.licensePlate}</td>
+
+
+                    <td>
+                        <div class="dropdown">
+                            <span>${orderInfo.user.login}</span>
+                            <div class="dropdown-content">
+                                    ${orderInfo.user.passportData.lastName}
+                                    ${orderInfo.user.passportData.firstName}
+                                    ${orderInfo.user.passportData.middleName}
+                                (${orderInfo.user.passportData.phone})
+                            </div>
+                        </div>
+                    </td>
+
+
+                    <td>${orderInfo.order.startDate}</td>
+                    <td>${orderInfo.order.endDate}</td>
+                    <td>${orderInfo.order.orderDate}</td>
                     <td>
                         <c:choose>
-                            <c:when test="${order.key.driver eq true}">
+                            <c:when test="${orderInfo.order.driver eq true}">
                                 YES
                             </c:when>
                             <c:otherwise>
@@ -225,11 +238,11 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
-                    <td>${order.key.totalPrice}</td>
-                    <td>${order.value}</td>
+                    <td>${orderInfo.order.totalPrice}</td>
+                    <td>${orderInfo.status}</td>
                     <c:choose>
-                        <c:when test="${order.key.managerComment ne null}">
-                            <td>${order.key.managerComment}</td>
+                        <c:when test="${orderInfo.order.managerComment ne null}">
+                            <td>${orderInfo.order.managerComment}</td>
                         </c:when>
                         <c:otherwise>
                             <td></td>
@@ -237,29 +250,30 @@
                     </c:choose>
                     <td align="center">
                         <c:choose>
-                            <c:when test="${order.value eq 'NEW'}">
+                            <c:when test="${orderInfo.status eq 'NEW'}">
                                 <form action="orders" method="post">
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="confirm_${order.key.id}"> Confirm
+                                            value="confirm_${orderInfo.order.id}"> Confirm
                                     </button>
+                                    <br><br>
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="reject_${order.key.id}"> Reject
+                                            value="reject_${orderInfo.order.id}"> Reject
                                     </button>
                                 </form>
                             </c:when>
-                            <c:when test="${order.value eq 'CONFIRMED'}">
+                            <c:when test="${orderInfo.status eq 'CONFIRMED'}">
                                 <form action="orders" method="post">
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="close_${order.key.id}"> Close
+                                            value="close_${orderInfo.order.id}"> Close
                                     </button>
                                 </form>
                             </c:when>
                             <c:when test="${order.value eq 'CLOSED'}">
-                                        <form action="orders" method="post">
-                                            <button class="btn btn-success" type="submit" name="action"
-                                                    value="check_${order.key.id}"> Repairment check
-                                            </button>
-                                        </form>
+                                <form action="orders" method="post">
+                                    <button class="btn btn-success" type="submit" name="action"
+                                            value="check_${orderInfo.order.id}"> Repairment check
+                                    </button>
+                                </form>
 
                             </c:when>
                         </c:choose>
@@ -295,7 +309,7 @@
                             <thead class="thead-inverse">
                             <tr>
                                 <th></th>
-                                <th>Car id</th>
+                                <th>Car</th>
                                 <th>Start date</th>
                                 <th>End date</th>
                                 <th>Order date</th>
@@ -307,16 +321,16 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${requestScope.orders}" var="order">
+                            <c:forEach items="${requestScope.orders}" var="orderInfo">
                                 <tr>
-                                    <td><img src="../../img/order.png" style="width: 120px; height: 120px"></td>
-                                    <td>${order.key.carId}</td>
-                                    <td>${order.key.startDate}</td>
-                                    <td>${order.key.endDate}</td>
-                                    <td>${order.key.orderDate}</td>
+                                    <td><img src="../../img/order.png"></td>
+                                    <td>${orderInfo.car.fullName}</td>
+                                    <td>${orderInfo.order.startDate}</td>
+                                    <td>${orderInfo.order.endDate}</td>
+                                    <td>${orderInfo.order.orderDate}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${order.key.driver eq true}">
+                                            <c:when test="${orderInfo.order.driver eq true}">
                                                 YES
                                             </c:when>
                                             <c:otherwise>
@@ -324,31 +338,31 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
-                                    <td>${order.key.totalPrice}</td>
+                                    <td>${orderInfo.order.totalPrice}</td>
                                     <c:choose>
-                                        <c:when test="${order.value eq 'NEW'}">
+                                        <c:when test="${orderInfo.status eq 'NEW'}">
                                             <td> Waiting for confirmation</td>
                                         </c:when>
                                         <c:otherwise>
-                                            <td>${order.value}</td>
+                                            <td>${orderInfo.status}</td>
                                         </c:otherwise>
                                     </c:choose>
                                     <c:choose>
-                                        <c:when test="${order.key.managerComment ne null}">
-                                            <td>${order.key.managerComment}</td>
+                                        <c:when test="${orderInfo.order.managerComment ne null}">
+                                            <td>${orderInfo.order.managerComment}</td>
                                         </c:when>
                                         <c:otherwise>
                                             <td></td>
                                         </c:otherwise>
                                     </c:choose>
                                     <c:choose>
-                                        <c:when test="${order.value eq 'CONFIRMED'}">
+                                        <c:when test="${orderInfo.status eq 'CONFIRMED'}">
                                             <td>
                                                 <form action="orders" method="get">
-                                                <button class="btn btn-success" type="submit"
-                                                        name="action"
-                                                        value="getCheck_${order.key.id}">Get a check
-                                                </button>
+                                                    <button class="btn btn-success" type="submit"
+                                                            name="action"
+                                                            value="getCheck_${orderInfo.order.id}">Get a check
+                                                    </button>
                                                 </form>
                                             </td>
                                         </c:when>
@@ -364,6 +378,9 @@
         </c:when>
         </c:choose>
     </div>
+</div>
+<div id="footer-wrapper" align="center">
+    <jsp:include page="Footer.jsp"></jsp:include>
 </div>
 </body>
 </html>

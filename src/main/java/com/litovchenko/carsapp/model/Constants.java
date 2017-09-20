@@ -45,6 +45,7 @@ public interface Constants {
      * Other fields
      */
 
+    String LICENCE_PLATE = "licensePlate";
     String CAR_CLASS_NAME = "carClassName";
     String CAR_MODEL = "model";
     String CAR_PRICE = "price";

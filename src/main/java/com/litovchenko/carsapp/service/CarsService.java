@@ -9,7 +9,7 @@ import java.util.*;
 
 public class CarsService {
 
-    private static void closeFactory(DAOFactory factory){
+    private static void closeFactory(DAOFactory factory) {
         try {
             factory.close();
         } catch (Exception e) {
@@ -17,7 +17,7 @@ public class CarsService {
         }
     }
 
-    public static List<String> getModels(){
+    public static List<String> getModels() {
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
         List<String> list;
@@ -26,7 +26,7 @@ public class CarsService {
         return list;
     }
 
-    public static List<Car> getAvailable(){
+    public static List<Car> getAvailable() {
         List<Car> list;
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
@@ -35,7 +35,7 @@ public class CarsService {
         return list;
     }
 
-    public static List<Car> getList(){
+    public static List<Car> getList() {
         List<Car> list;
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
@@ -44,20 +44,20 @@ public class CarsService {
         return list;
     }
 
-    public static List<Car> pickByPrice(List<Car> list, double price, String minMax){
+    public static List<Car> pickByPrice(List<Car> list, double price, String minMax) {
         List<Car> newList = new ArrayList<>();
-        switch (minMax){
-            case "min" : {
-                for(Car car: list){
-                    if(car.getPrice() >= price){
+        switch (minMax) {
+            case "min": {
+                for (Car car : list) {
+                    if (car.getPrice() >= price) {
                         newList.add(car);
                     }
                 }
                 break;
             }
-            case "max" : {
-                for(Car car: list){
-                    if(car.getPrice() <= price){
+            case "max": {
+                for (Car car : list) {
+                    if (car.getPrice() <= price) {
                         newList.add(car);
                     }
                 }
@@ -67,33 +67,33 @@ public class CarsService {
         return newList;
     }
 
-    public static List<Car> pickByModel(List<Car> list, String model){
+    public static List<Car> pickByModel(List<Car> list, String model) {
         List<Car> newList = new ArrayList<>();
-        for(Car car : list){
-            if(model.equals(car.getModel())){
+        for (Car car : list) {
+            if (model.equals(car.getModel())) {
                 newList.add(car);
             }
         }
         return newList;
     }
 
-    public static List<Car> pickByClass(List<Car> list, String model){
+    public static List<Car> pickByClass(List<Car> list, String model) {
         List<Car> newList = new ArrayList<>();
-        for(Car car: list){
-            if(model.equals(car.getCarClassName())){
+        for (Car car : list) {
+            if (model.equals(car.getCarClassName())) {
                 newList.add(car);
             }
         }
         return newList;
     }
 
-    public static List<Car> sort(List<Car>list, String sorting){
-        switch(sorting){
+    public static List<Car> sort(List<Car> list, String sorting) {
+        switch (sorting) {
             case "min-max": {
                 Collections.sort(list, new Comparator<Car>() {
                     @Override
                     public int compare(Car o1, Car o2) {
-                        if(o1.getPrice() == o2.getPrice()){
+                        if (o1.getPrice() == o2.getPrice()) {
                             return 0;
                         }
                         return o1.getPrice() > o2.getPrice() ? 1 : -1;
@@ -105,7 +105,7 @@ public class CarsService {
                 Collections.sort(list, new Comparator<Car>() {
                     @Override
                     public int compare(Car o1, Car o2) {
-                        if(o1.getPrice() == o2.getPrice()){
+                        if (o1.getPrice() == o2.getPrice()) {
                             return 0;
                         }
                         return o1.getPrice() < o2.getPrice() ? 1 : -1;
@@ -126,7 +126,7 @@ public class CarsService {
         return list;
     }
 
-    public static boolean deleteById(String deleteAction){
+    public static boolean deleteById(String deleteAction) {
         int id = Integer.parseInt(deleteAction.split("_")[1]);
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
@@ -135,9 +135,9 @@ public class CarsService {
         return isDeleted;
     }
 
-    public static boolean addNewCar(String model, String carClass, String price, String fullName,
-                                    String description, String driverPrice){
-        Car car = new Car(0, model, Integer.parseInt(carClass), Double.parseDouble(price),
+    public static boolean addNewCar(String licencePlate, String model, String carClass, String price, String fullName,
+                                    String description, String driverPrice) {
+        Car car = new Car(0, licencePlate, model, Integer.parseInt(carClass), Double.parseDouble(price),
                 fullName, description, Car.Status.AVAILABLE, Double.parseDouble(driverPrice));
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
@@ -146,7 +146,7 @@ public class CarsService {
         return isInserted;
     }
 
-    public static Car getById(String id){
+    public static Car getById(String id) {
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
         Car car = dao.getById(Integer.parseInt(id));
@@ -154,29 +154,31 @@ public class CarsService {
         return car;
     }
 
-    public static boolean update(int id, String model, String carClass, String price, String fullName,
-                                 String description, Car.Status status, String driverPrice){
-        Car car = new Car(id, model, Integer.parseInt(carClass), Double.parseDouble(price),
+    public static boolean update(int id, String licencePlate, String model, String carClass, String price, String fullName,
+                                 String description, Car.Status status, String driverPrice) {
+        Car car = new Car(id, licencePlate, model, Integer.parseInt(carClass), Double.parseDouble(price),
                 fullName, description, status, Double.parseDouble(driverPrice));
-        DAOFactory factory= new MySqlDAOFactory();
+        DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
         boolean isUpdated = dao.update(car);
         closeFactory(factory);
         return isUpdated;
     }
 
-    public static List<Object> getStatuses(){
+    public static List<Object> getStatuses() {
         List<Object> list = Arrays.asList(Car.Status.values());
         return list;
     }
 
-    public static boolean changeStatus(Car car, Car.Status newStatus){
+    public static boolean changeStatus(Car car, Car.Status newStatus) {
         car.setStatus(newStatus);
         DAOFactory factory = new MySqlDAOFactory();
         CarDAO dao = factory.getCarDAO();
-        if(!dao.getById(car.getId()).getStatus().equals(Car.Status.AVAILABLE)){
-            closeFactory(factory);
-            return false;
+        if (Car.Status.IN_RENT.equals(newStatus)) {
+            if (!dao.getById(car.getId()).getStatus().equals(Car.Status.AVAILABLE)) {
+                closeFactory(factory);
+                return false;
+            }
         }
         boolean ifUpdated = dao.update(car);
         closeFactory(factory);

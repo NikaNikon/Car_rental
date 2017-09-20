@@ -9,9 +9,6 @@ public class EncodingFilter  implements Filter{
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
-        System.out.println("filter init");
-
         String encodingParam = filterConfig.getInitParameter("encoding");
         if (encodingParam != null) {
             encoding = encodingParam;
@@ -21,9 +18,6 @@ public class EncodingFilter  implements Filter{
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain filterChain) throws IOException, ServletException {
-
-        System.out.println("filter doFilter");
-
         request.setCharacterEncoding(encoding);
         filterChain.doFilter(request, response);
     }

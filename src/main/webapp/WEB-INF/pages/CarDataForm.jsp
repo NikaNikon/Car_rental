@@ -133,6 +133,11 @@
             <c:set var="car" value="${requestScope.car}"></c:set>
             <c:choose>
                 <c:when test="${car ne null}">
+
+                    <label for="licensePlate"> License plate </label>
+                    <input type="text" class="form-control" required name="licensePlate" id="licensePlate"
+                           pattern="([A-Z]{2}[0-9]{4}[A-Z]{2})" value="${car.licensePlate}">
+
                     <label for="modell"> Model </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
                            required autofocus name="model" id="modell" value="${car.model}">
@@ -198,6 +203,11 @@
                     </button>
                 </c:when>
                 <c:otherwise>
+
+                    <label for="licensePlate"> License plate </label>
+                    <input type="text" class="form-control" required name="licensePlate" id="licensePlate"
+                           pattern="([A-Z]{2}[0-9]{4}[A-Z]{2})">
+
                     <label for="model"> Model </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
                            required autofocus name="model" id="model">

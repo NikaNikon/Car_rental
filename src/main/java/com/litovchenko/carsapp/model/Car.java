@@ -12,6 +12,8 @@ public class Car implements Identified {
     @GeneratedValue
     private int id;
 
+    private String licensePlate;
+
     private String model;
 
     private int carClassId;
@@ -36,9 +38,10 @@ public class Car implements Identified {
     public Car() {
     }
 
-    public Car(int id, String model, int class_id, double price, String full_name,
+    public Car(int id, String licensePlate, String model, int class_id, double price, String full_name,
                String description, Status status, double driver_price) {
         this.id = id;
+        this.licensePlate = licensePlate;
         this.model = model;
         this.carClassId = class_id;
         this.price = price;
@@ -56,6 +59,14 @@ public class Car implements Identified {
     @Override
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public String getModel() {

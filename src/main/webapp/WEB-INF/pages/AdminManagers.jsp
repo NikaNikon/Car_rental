@@ -88,8 +88,7 @@
 <body>
 <header id="header">
     <form action="MainPageServlet" method="get">
-        <button class="btn-link">The best car rental company</button>
-        <hr>
+        <button class="btn-link">"Wheels" rental service</button>
     </form>
     <div>
         <div style="margin-left: 75%">

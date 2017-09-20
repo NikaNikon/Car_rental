@@ -64,8 +64,12 @@ public class MainPageServlet extends HttpServlet {
         req.getSession().setAttribute("cars", list);
         User user = ((User) (req.getSession().getAttribute("user")));
         if (user != null) {
-            req.getSession().setAttribute("msg",
-                    OrdersService.checkAbilityToMakeOrders(user));
+            if("MANAGER".equals(user.getRole()) || "ADMIN".equals(user.getRole())){
+                req.getSession().setAttribute("msg", "you are " + user.getRole().toLowerCase());
+            } else {
+                req.getSession().setAttribute("msg",
+                        OrdersService.checkAbilityToMakeOrders(user));
+            }
         }
 
         req.setAttribute("cars", list);

@@ -156,8 +156,7 @@
 <body>
 <header id="header">
     <form action="MainPageServlet" method="get">
-        <button class="btn-link">The best car rental company</button>
-        <hr>
+        <button class="btn-link">"Wheels" rental service</button>
     </form>
     <div>
         <c:choose>
@@ -229,7 +228,7 @@
 <div id="container">
     <main id="center" class="column">
         <article>
-            <h1>Welcome to our cool site!</h1>
+            <h1>Welcome to the coolest site ever!</h1><hr>
         </article>
     </main>
 

@@ -14,6 +14,7 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `cars` (
   `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `licensePlate` VARCHAR(8) NOT NULL,
   `model` VARCHAR(20) NOT NULL,
   `carClassId` INT(11) UNSIGNED NOT NULL,
   `price` DECIMAL(10,0) NOT NULL,
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `cars` (
   `status` ENUM('AVAILABLE', 'IN_RENT', 'BEING_REPAIRED') NOT NULL,
   `driverPrice` DECIMAL(10,0) NOT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE INDEX `licensePlate_UNIQUE` (`licensePlate` ASC),
   CONSTRAINT `fk_cars_car_classes`
 	FOREIGN KEY (`carClassId`)
     REFERENCES `car_classes` (`id`)

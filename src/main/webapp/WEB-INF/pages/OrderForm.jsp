@@ -179,7 +179,9 @@
             </c:choose>
 
             <hr>
-            <label>Rental dates </label><br>
+            <label>Rental dates (You can take your car at 8am and must return it at
+                the same time on the day selected in the field "to". The day of return won't be
+                included in the total price)</label><br>
             <div style="display: inline-block">
                 <label for="start">From:</label>
                 <br>
@@ -206,12 +208,14 @@
                     endDate,
                     updateStartDate = function() {
                         startPicker.setStartRange(startDate);
-                        endPicker.setStartRange(startDate);
-                        endPicker.setMinDate(startDate);
+                        endPicker.setStartRange(new Date(startDate.getFullYear(),
+                            startDate.getMonth(), startDate.getDate()+1));
+                        endPicker.setMinDate(new Date(startDate.getFullYear(),
+                            startDate.getMonth(), startDate.getDate()+1));
                     },
                     updateEndDate = function() {
                         startPicker.setEndRange(endDate);
-                        startPicker.setMaxDate(endDate);
+                        /*startPicker.setMaxDate(endDate);*/
                         endPicker.setEndRange(endDate);
                     },
                     startPicker = new Pikaday({
@@ -219,9 +223,9 @@
                         format: 'YYYY-MM-DD',
                         minDate: new Date(new Date().getFullYear(),new Date().getMonth(),
                             new Date().getDate()+1),
-                        maxDate: new Date(new Date().getFullYear(),new Date().getMonth(),
+                            maxDate: new Date(new Date().getFullYear(),new Date().getMonth(),
                             new Date().getDate()+3),
-                        onSelect: function() {
+                            onSelect: function() {
                             startDate = this.getDate();
                             updateStartDate();
                         }

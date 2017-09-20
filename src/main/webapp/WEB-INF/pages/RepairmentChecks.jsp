@@ -111,8 +111,7 @@
 <body>
 <header id="header">
     <form action="MainPageServlet" method="get">
-        <button class="btn-link">The best car rental company</button>
-        <hr>
+        <button class="btn-link">"Wheels" rental service</button>
     </form>
     <div>
         <div style="margin-left: 75%">
@@ -270,6 +269,9 @@
         </c:when>
         </c:choose>
     </div>
+</div>
+<div id="footer-wrapper" align="center">
+    <jsp:include page="Footer.jsp"></jsp:include>
 </div>
 </body>
 </html>

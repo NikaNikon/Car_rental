@@ -34,7 +34,8 @@ public class CarFormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         if ("save".equals(req.getParameter("action"))) {
-            boolean isAdded = CarsService.addNewCar(req.getParameter("model"), req.getParameter("carClass"),
+            boolean isAdded = CarsService.addNewCar(req.getParameter("licensePlate"),
+                    req.getParameter("model"), req.getParameter("carClass"),
                     req.getParameter("price"), req.getParameter("fullName"),
                     req.getParameter("description"), req.getParameter("driverPrice"));
             if (isAdded) {
@@ -44,10 +45,11 @@ public class CarFormServlet extends HttpServlet {
             }
         } else if ("update".equals(req.getParameter("action"))) {
             Car car = (Car) req.getSession().getAttribute("car");
-            boolean isUpdated = CarsService.update(car.getId(), req.getParameter("model"),
-                    req.getParameter("carClass"), req.getParameter("price"),
-                    req.getParameter("fullName"), req.getParameter("description"),
-                    Car.Status.valueOf(req.getParameter("status")), req.getParameter("driverPrice"));
+            boolean isUpdated = CarsService.update(car.getId(), req.getParameter("licencePlate"),
+                    req.getParameter("model"), req.getParameter("carClass"),
+                    req.getParameter("price"), req.getParameter("fullName"),
+                    req.getParameter("description"), Car.Status.valueOf(req.getParameter("status")),
+                    req.getParameter("driverPrice"));
             if (isUpdated) {
                 req.getSession().removeAttribute("car");
                 resp.sendRedirect("/admin?action=cars");

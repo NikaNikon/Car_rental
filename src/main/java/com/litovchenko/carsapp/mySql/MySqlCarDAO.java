@@ -22,13 +22,14 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     private static final String SELECT_BY_TEMPLATE;
 
     static {
-        SQL_INSERT_QUERY = "INSERT INTO " + CARS + " (" + ID + COMA + CAR_MODEL + COMA + CAR_CLASS_ID +
-                COMA + CAR_PRICE + COMA + CAR_FULL_NAME + COMA + DESCRIPTION + COMA + CAR_STATUS +
-                COMA + DRIVER_PRICE + ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?)";
+        SQL_INSERT_QUERY = "INSERT INTO " + CARS + " (" + ID + COMA + LICENCE_PLATE + COMA +
+                CAR_MODEL + COMA + CAR_CLASS_ID + COMA + CAR_PRICE + COMA + CAR_FULL_NAME +
+                COMA + DESCRIPTION + COMA + CAR_STATUS + COMA + DRIVER_PRICE +
+                ") VALUES (DEFAULT, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        SQL_UPDATE_QUERY = "UPDATE " + CARS + " SET " + CAR_MODEL + EQ_COMA + CAR_CLASS_ID + EQ_COMA +
-                CAR_PRICE + EQ_COMA + CAR_FULL_NAME + EQ_COMA + DESCRIPTION + EQ_COMA + CAR_STATUS +
-                EQ_COMA + DRIVER_PRICE + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
+        SQL_UPDATE_QUERY = "UPDATE " + CARS + " SET " + LICENCE_PLATE + EQ_COMA + CAR_MODEL + EQ_COMA +
+                CAR_CLASS_ID + EQ_COMA + CAR_PRICE + EQ_COMA + CAR_FULL_NAME + EQ_COMA + DESCRIPTION +
+                EQ_COMA + CAR_STATUS + EQ_COMA + DRIVER_PRICE + EQ_PARAM + " WHERE " + ID + EQ_PARAM;
 
         SQL_DELETE_QUERY = "DELETE FROM " + CARS + " WHERE " + ID + EQ_PARAM;
         SQL_SELECT_ALL_QUERY = "SELECT * FROM " + CARS;
@@ -73,9 +74,10 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
             while (rs.next()) {
                 CarClassDAO carClassDAO = new MySqlCarClassDAO(con);
                 String car_class = carClassDAO.getById(rs.getInt(CAR_CLASS_ID)).getCarClassName();
-                Car car = new Car(rs.getInt(ID), rs.getString(CAR_MODEL), rs.getInt(CAR_CLASS_ID),
-                        rs.getDouble(CAR_PRICE), rs.getString(CAR_FULL_NAME), rs.getString(DESCRIPTION),
-                        Car.Status.valueOf(rs.getString(CAR_STATUS)), rs.getDouble(DRIVER_PRICE));
+                Car car = new Car(rs.getInt(ID), rs.getString(LICENCE_PLATE), rs.getString(CAR_MODEL),
+                        rs.getInt(CAR_CLASS_ID), rs.getDouble(CAR_PRICE), rs.getString(CAR_FULL_NAME),
+                        rs.getString(DESCRIPTION), Car.Status.valueOf(rs.getString(CAR_STATUS)),
+                        rs.getDouble(DRIVER_PRICE));
                 car.setCarClassName(car_class);
                 list.add(car);
             }
@@ -91,13 +93,14 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     @Override
     protected void prepareStatementForInsert(PreparedStatement st, Car object) {
         try {
-            st.setString(1, object.getModel());
-            st.setInt(2, object.getCarClassId());
-            st.setDouble(3, object.getPrice());
-            st.setString(4, object.getFullName());
-            st.setString(5, object.getDescription());
-            st.setString(6, object.getStatus().toString());
-            st.setDouble(7, object.getDriverPrice());
+            st.setString(1, object.getLicensePlate());
+            st.setString(2, object.getModel());
+            st.setInt(3, object.getCarClassId());
+            st.setDouble(4, object.getPrice());
+            st.setString(5, object.getFullName());
+            st.setString(6, object.getDescription());
+            st.setString(7, object.getStatus().toString());
+            st.setDouble(8, object.getDriverPrice());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -107,7 +110,7 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     protected void prepareStatementForUpdate(PreparedStatement st, Car object) {
         prepareStatementForInsert(st, object);
         try {
-            st.setInt(8, object.getId());
+            st.setInt(9, object.getId());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }

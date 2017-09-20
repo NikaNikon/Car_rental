@@ -21,7 +21,8 @@ public class OrdersServlet extends HttpServlet {
         if ("CUSTOMER".equals(user.getRole())) {
             String action = req.getParameter("action");
             if (action == null || "new".equals(action) || "back".equals(action)) {
-                req.setAttribute("orders", OrdersService.getNewOrders(user.getId()));
+                req.setAttribute("orders", OrdersService.getNewOrders(
+                        OrdersService.getOrders(user.getId())));
             } else if ("all".equals(action)) {
                 req.setAttribute("orders", OrdersService.getOrders(user.getId()));
             } else if (action.startsWith("getCheck_")) {
@@ -39,7 +40,7 @@ public class OrdersServlet extends HttpServlet {
         } else if ("MANAGER".equals(user.getRole())) {
             String action = req.getParameter("action");
             if (action == null || "new".equals(action) || "back".equals(action)) {
-                req.setAttribute("orders", OrdersService.getNewOrders());
+                req.setAttribute("orders", OrdersService.getNewOrders(OrdersService.getOrders()));
             } else if ("active".equals(action)) {
                 req.setAttribute("orders",
                         OrdersService.getActiveOrders(OrdersService.getOrders()));
