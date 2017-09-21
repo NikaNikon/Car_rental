@@ -11,11 +11,11 @@ import com.litovchenko.carsapp.model.PassportData;
 import com.litovchenko.carsapp.model.RepairmentCheck;
 import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.mySql.MySqlDAOFactory;
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,11 +25,14 @@ import java.util.List;
 
 public class OrdersService {
 
+    static final Logger LOGGER = Logger.getLogger(OrdersService.class);
+
     private static void closeFactory(DAOFactory factory) {
         try {
             factory.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Cannot close database connection: " + e);
+            throw new ApplicationException(e);
         }
     }
 
@@ -41,9 +44,8 @@ public class OrdersService {
 
         DAOFactory factory = new MySqlDAOFactory();
         OrderDAO dao = factory.getOrderDAO();
-        RepairmentCheckDAO checkDAO = factory.getRepairmentCheckDAO();
 
-        List<RepairmentCheck> list = checkDAO.getByUserId(user.getId());
+        List<RepairmentCheck> list = ChecksService.getByUserId(user.getId());
         if (list != null) {
             for (RepairmentCheck check : list) {
                 if (check.getStatus().equals(RepairmentCheck.Status.UNPAYED)) {
@@ -52,7 +54,13 @@ public class OrdersService {
                 }
             }
         }
-        List<Order> orders = dao.getByUserId(user.getId());
+        List<Order> orders = null;
+        try {
+            orders = dao.getByUserId(user.getId());
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get orders by user id: " + e);
+            throw new ApplicationException(e);
+        }
         if (orders != null) {
             for (Order order : orders) {
                 String status = order.getStatus();
@@ -92,7 +100,8 @@ public class OrdersService {
                 return false;
             }
         } catch (ParseException e) {
-            System.out.println("Can't parse date" + System.lineSeparator() + e);
+            LOGGER.error("Cannot resolve input date in order form: " + e);
+            throw new UserInputException(e);
         }
 
         if (!phone.matches("(\\+380.{9})")) {
@@ -119,22 +128,27 @@ public class OrdersService {
 
         Order order = new Order(0, userId, carId, startDate, endDate,
                 orderDate, driver, 0, 0);
-        if (passportDao.getById(userId) != null) {
-            if (dao.insert(order)) {
-                success = true;
-            }
-        } else {
-            PassportData passport = new PassportData(userId, firstName, middleName,
-                    lastName, birthDate, phone);
-            factory.startTransaction();
-            boolean isPassportDataInserted = passportDao.insert(passport);
-            boolean isOrderInserted = dao.insert(order);
-            if (isPassportDataInserted == false || isOrderInserted == false) {
-                success = false;
-                factory.abortTransaction();
+        try {
+            if (passportDao.getById(userId) != null) {
+                if (dao.insert(order)) {
+                    success = true;
+                }
             } else {
-                success = true;
+                PassportData passport = new PassportData(userId, firstName, middleName,
+                        lastName, birthDate, phone);
+                factory.startTransaction();
+                boolean isPassportDataInserted = passportDao.insert(passport);
+                boolean isOrderInserted = dao.insert(order);
+                if (isPassportDataInserted == false || isOrderInserted == false) {
+                    success = false;
+                    factory.abortTransaction();
+                } else {
+                    success = true;
+                }
             }
+        } catch (SQLException e) {
+            LOGGER.error("Cannot process data to make order: " + e);
+            throw new ApplicationException(e);
         }
         closeFactory(factory);
         return success;
@@ -179,9 +193,19 @@ public class OrdersService {
         UserDAO userDAO = factory.getUserDAO();
         List<Order> orders;
         if (userId < 0) {
-            orders = orderDAO.getAll();
+            try {
+                orders = orderDAO.getAll();
+            } catch (SQLException e) {
+                LOGGER.error("Cannot get orders from database: " + e);
+                throw new ApplicationException(e);
+            }
         } else {
-            orders = orderDAO.getByUserId(userId);
+            try {
+                orders = orderDAO.getByUserId(userId);
+            } catch (SQLException e) {
+                LOGGER.error("Cannot get orders by user id from database: " + e);
+                throw new ApplicationException(e);
+            }
         }
         if (orders == null) {
             closeFactory(factory);
@@ -189,9 +213,15 @@ public class OrdersService {
         }
         List<OrderInfo> list = new ArrayList<>();
         for (Order order : orders) {
-            OrderInfo orderInfo = new OrderInfo(order, carDAO.getById(order.getCarId()),
-                    userDAO.getById(order.getUserId()),
-                    statusDAO.getById(order.getStatusId()).getStatus());
+            OrderInfo orderInfo = null;
+            try {
+                orderInfo = new OrderInfo(order, carDAO.getById(order.getCarId()),
+                        userDAO.getById(order.getUserId()),
+                        statusDAO.getById(order.getStatusId()).getStatus());
+            } catch (SQLException e) {
+                LOGGER.error("Cannot get information from database to create orderInfo: " + e);
+                throw new ApplicationException(e);
+            }
             list.add(orderInfo);
         }
         closeFactory(factory);
@@ -234,7 +264,13 @@ public class OrdersService {
         DAOFactory factory = new MySqlDAOFactory();
         StatusDAO statusDAO = factory.getStatusDAO();
         OrderDAO dao = factory.getOrderDAO();
-        boolean isUpdated = dao.updateStatus(id, statusDAO.getByName(status).getId());
+        boolean isUpdated = false;
+        try {
+            isUpdated = dao.updateStatus(id, statusDAO.getByName(status).getId());
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get user status by name from database: " + e);
+            throw new ApplicationException(e);
+        }
         closeFactory(factory);
         return isUpdated;
     }
@@ -247,8 +283,14 @@ public class OrdersService {
         DAOFactory factory = new MySqlDAOFactory();
         OrderDAO dao = factory.getOrderDAO();
         StatusDAO statusDAO = factory.getStatusDAO();
-        boolean isUpdated = dao.updateStatusWithComment(id,
-                statusDAO.getByName("REJECTED").getId(), comment);
+        boolean isUpdated = false;
+        try {
+            isUpdated = dao.updateStatusWithComment(id,
+                    statusDAO.getByName("REJECTED").getId(), comment);
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get user status by name from database: " + e);
+            throw new ApplicationException(e);
+        }
         closeFactory(factory);
         return isUpdated;
     }
@@ -260,7 +302,13 @@ public class OrdersService {
     public static Order getOrder(int id) {
         DAOFactory factory = new MySqlDAOFactory();
         OrderDAO dao = factory.getOrderDAO();
-        Order order = dao.getById(id);
+        Order order = null;
+        try {
+            order = dao.getById(id);
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get order by id from database: " + e);
+            throw new ApplicationException(e);
+        }
         closeFactory(factory);
         return order;
     }
@@ -275,7 +323,13 @@ public class OrdersService {
     public static byte[] getCheck(int orderId) {
         DAOFactory factory = new MySqlDAOFactory();
         OrderDAO dao = factory.getOrderDAO();
-        Order order = dao.getById(orderId);
+        Order order = null;
+        try {
+            order = dao.getById(orderId);
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get order by id from database: " + e);
+            throw new ApplicationException(e);
+        }
         byte[] bytes = null;
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 50, 50, 50, 50);
@@ -288,7 +342,8 @@ public class OrdersService {
             doc.close();
             bytes = byteArrayOutputStream.toByteArray();
         } catch (DocumentException e) {
-            System.out.println("Cannot process document to generate a check" + e);
+            LOGGER.error("Cannot process document to generate a check" + e);
+            throw new ApplicationException(e);
         }
         file.delete();
 

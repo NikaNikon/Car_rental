@@ -1,4 +1,4 @@
-package com.litovchenko.carsapp.controller;
+package com.litovchenko.carsapp.controller.listeners;
 
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;

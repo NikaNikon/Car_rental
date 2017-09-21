@@ -4,7 +4,6 @@ import com.litovchenko.carsapp.dao.CarClassDAO;
 import com.litovchenko.carsapp.dao.CarDAO;
 import com.litovchenko.carsapp.model.Car;
 
-import javax.persistence.PersistenceException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,56 +67,44 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     }
 
     @Override
-    protected List<Car> parseResultSet(ResultSet rs) {
+    protected List<Car> parseResultSet(ResultSet rs) throws SQLException {
         List<Car> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                CarClassDAO carClassDAO = new MySqlCarClassDAO(con);
-                String car_class = carClassDAO.getById(rs.getInt(CAR_CLASS_ID)).getCarClassName();
-                Car car = new Car(rs.getInt(ID), rs.getString(LICENCE_PLATE), rs.getString(CAR_MODEL),
-                        rs.getInt(CAR_CLASS_ID), rs.getDouble(CAR_PRICE), rs.getString(CAR_FULL_NAME),
-                        rs.getString(DESCRIPTION), Car.Status.valueOf(rs.getString(CAR_STATUS)),
-                        rs.getDouble(DRIVER_PRICE));
-                car.setCarClassName(car_class);
-                list.add(car);
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        while (rs.next()) {
+            CarClassDAO carClassDAO = new MySqlCarClassDAO(con);
+            String car_class = carClassDAO.getById(rs.getInt(CAR_CLASS_ID)).getCarClassName();
+            Car car = new Car(rs.getInt(ID), rs.getString(LICENCE_PLATE), rs.getString(CAR_MODEL),
+                    rs.getInt(CAR_CLASS_ID), rs.getDouble(CAR_PRICE), rs.getString(CAR_FULL_NAME),
+                    rs.getString(DESCRIPTION), Car.Status.valueOf(rs.getString(CAR_STATUS)),
+                    rs.getDouble(DRIVER_PRICE));
+            car.setCarClassName(car_class);
+            list.add(car);
         }
         if (list.isEmpty()) {
-            return null;
+            list = null;
         }
         return list;
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, Car object) {
-        try {
-            st.setString(1, object.getLicensePlate());
-            st.setString(2, object.getModel());
-            st.setInt(3, object.getCarClassId());
-            st.setDouble(4, object.getPrice());
-            st.setString(5, object.getFullName());
-            st.setString(6, object.getDescription());
-            st.setString(7, object.getStatus().toString());
-            st.setDouble(8, object.getDriverPrice());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, Car object) throws SQLException {
+        st.setString(1, object.getLicensePlate());
+        st.setString(2, object.getModel());
+        st.setInt(3, object.getCarClassId());
+        st.setDouble(4, object.getPrice());
+        st.setString(5, object.getFullName());
+        st.setString(6, object.getDescription());
+        st.setString(7, object.getStatus().toString());
+        st.setDouble(8, object.getDriverPrice());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, Car object) {
+    protected void prepareStatementForUpdate(PreparedStatement st, Car object) throws SQLException {
         prepareStatementForInsert(st, object);
-        try {
-            st.setInt(9, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        st.setInt(9, object.getId());
     }
 
     @Override
-    public List<Car> getByModel(String model) {
+    public List<Car> getByModel(String model) throws SQLException {
         List<Car> list;
         String sql = SELECT_BY_TEMPLATE + CAR_MODEL + " LIKE ?";
         list = getByStringParam(sql, model);
@@ -125,7 +112,7 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     }
 
     @Override
-    public List<Car> getByClass(String car_class) {
+    public List<Car> getByClass(String car_class) throws SQLException {
         List<Car> list;
         String sql = "SELECT * FROM " + CARS + COMA + CAR_CLASSES + " WHERE " +
                 CAR_CLASSES + "." + ID + " = " + CAR_CLASS_ID + " AND " + CAR_CLASS_NAME + " LIKE ? ";
@@ -134,22 +121,20 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     }
 
     @Override
-    public List<Car> getByPrice(int min, int max) {
+    public List<Car> getByPrice(int min, int max) throws SQLException {
         List<Car> list;
         String sql = SELECT_BY_TEMPLATE + CAR_PRICE + " BETWEEN ? AND ?";
-        try (PreparedStatement pstm = con.prepareStatement(sql)) {
-            pstm.setInt(1, min);
-            pstm.setInt(2, max);
-            ResultSet rs = pstm.executeQuery();
-            list = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, min);
+        pstm.setInt(2, max);
+        ResultSet rs = pstm.executeQuery();
+        list = parseResultSet(rs);
+        pstm.close();
         return list;
     }
 
     @Override
-    public List<Car> getByStatus(Car.Status status) {
+    public List<Car> getByStatus(Car.Status status) throws SQLException {
         List<Car> list;
         String sql = SELECT_BY_TEMPLATE + CAR_STATUS + " LIKE ?";
         list = getByStringParam(sql, status.toString());
@@ -157,33 +142,29 @@ public class MySqlCarDAO extends MySqlGenericDAO<Car> implements CarDAO {
     }
 
     @Override
-    public boolean deleteAllByClass(String car_class) {
+    public boolean deleteAllByClass(String car_class) throws SQLException {
         String sql = "DELETE FROM " + CARS + COMA + CAR_CLASSES + " WHERE " +
                 CAR_CLASSES + "." + ID + " = " + CAR_CLASS_ID + " AND " + CAR_CLASS_NAME + " LIKE ? ";
-        try (PreparedStatement pstm = con.prepareStatement(sql)) {
-            pstm.setString(1, car_class);
-            pstm.executeUpdate();
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setString(1, car_class);
+        pstm.executeUpdate();
+        pstm.close();
         return true;
     }
 
     @Override
-    public List<String> getModels() {
+    public List<String> getModels() throws SQLException {
         List<String> list = new ArrayList<>();
         String sql = "SELECT DISTINCT " + CAR_MODEL + " FROM " + CARS;
-        try(Statement stm = con.createStatement()){
-            ResultSet rs = stm.executeQuery(sql);
-            while(rs.next()){
-                list.add(rs.getString(CAR_MODEL));
-            }
-        } catch (SQLException e){
-            throw new PersistenceException(e);
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery(sql);
+        while (rs.next()) {
+            list.add(rs.getString(CAR_MODEL));
         }
-        if(list.isEmpty()){
-            return null;
+        if (list.isEmpty()) {
+            list = null;
         }
+        stm.close();
         return list;
     }
 }

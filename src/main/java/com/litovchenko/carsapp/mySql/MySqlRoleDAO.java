@@ -3,7 +3,6 @@ package com.litovchenko.carsapp.mySql;
 import com.litovchenko.carsapp.dao.RoleDAO;
 import com.litovchenko.carsapp.model.Role;
 
-import javax.persistence.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +33,7 @@ public class MySqlRoleDAO extends MySqlGenericDAO<Role> implements RoleDAO {
     }
 
     @Override
-    public Role getByRoleName(String roleName) {
+    public Role getByRoleName(String roleName) throws SQLException {
         List<Role> list;
         String sql = SQL_SELECT_ALL_QUERY + " WHERE " + ROLE_NAME + EQ_PARAM;
         list = getByStringParam(sql, roleName);
@@ -70,38 +69,26 @@ public class MySqlRoleDAO extends MySqlGenericDAO<Role> implements RoleDAO {
     }
 
     @Override
-    protected List<Role> parseResultSet(ResultSet rs) {
+    protected List<Role> parseResultSet(ResultSet rs) throws SQLException {
         List<Role> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                Role role = new Role(rs.getInt(ID), rs.getString(ROLE_NAME));
-                list.add(role);
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        while (rs.next()) {
+            Role role = new Role(rs.getInt(ID), rs.getString(ROLE_NAME));
+            list.add(role);
         }
         if (list.isEmpty()) {
-            return null;
+            list = null;
         }
         return list;
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, Role object) {
-        try {
-            st.setString(1, object.getRoleName());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, Role object) throws SQLException {
+        st.setString(1, object.getRoleName());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, Role object) {
-        try {
-            st.setString(1, object.getRoleName());
-            st.setInt(2, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForUpdate(PreparedStatement st, Role object) throws SQLException {
+        st.setString(1, object.getRoleName());
+        st.setInt(2, object.getId());
     }
 }

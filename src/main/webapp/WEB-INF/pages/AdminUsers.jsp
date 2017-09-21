@@ -92,6 +92,14 @@
             background: #BCCE98;
         }
 
+        table{
+            width: 100%;
+        }
+
+        th{
+            width: 16%;
+        }
+
     </style>
 
 </head>

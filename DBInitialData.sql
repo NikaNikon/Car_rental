@@ -62,7 +62,7 @@ INSERT INTO users (id, roleId, login, password, email, blocked) VALUES
     (DEFAULT, 2, "manager", "1d0258c2440a8d19e716292b231e3190", "manager@gmail.com", 0),
 	(DEFAULT, 2, "manager2", "8df5127cd164b5bc2d2b78410a7eea0c", "manager2@gmail.com", 0),
     (DEFAULT, 2, "manager3", "2d3a5db4a2a9717b43698520a8de57d0", "manager3@gmail.com", 0),
-    (DEFAULT, 1, "Veronika07", "191671e9b59fb2f0f24ca29f3a810d35", "nikon@gmail.com", 0),
+    (DEFAULT, 1, "Veronika07", "191671e9b59fb2f0f24ca29f3a810d35", "nikon123@gmail.com", 0),
     (DEFAULT, 1, "Deptor", "ef86f37b44add77c782cf0ddf6fa2f88", "deptor@gmail.com", 0),
     (DEFAULT, 1, "user123", "6ad14ba9986e3615423dfca256d04e3f", "user@gmail.com", 0),
     (DEFAULT, 1, "simpleUser", "c755fe1256b92148bfd60fa50ea5328a", "simpleUser@gmail.com", DEFAULT);

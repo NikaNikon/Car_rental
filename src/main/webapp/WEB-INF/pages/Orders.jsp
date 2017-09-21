@@ -111,6 +111,14 @@
             border-radius: 0
         }
 
+        table{
+            width: 100%;
+        }
+
+        th{
+            width: 9%;
+        }
+
     </style>
 
 </head>
@@ -215,7 +223,7 @@
     <c:otherwise>
     <div id="right" class="column">
 
-        <table class="table">
+        <table class="table" style="width: 100%">
             <thead class="thead-inverse">
             <tr>
                 <th></th>
@@ -297,7 +305,7 @@
                                     </button>
                                 </form>
                             </c:when>
-                            <c:when test="${order.value eq 'CLOSED'}">
+                            <c:when test="${orderInfo.status eq 'CLOSED'}">
                                 <form action="orders" method="post">
                                     <button class="btn btn-success" type="submit" name="action"
                                             value="check_${orderInfo.order.id}">
@@ -338,16 +346,16 @@
                         <table class="table">
                             <thead class="thead-inverse">
                             <tr>
-                                <th></th>
-                                <th><fmt:message key="table.orders.car"/></th>
-                                <th><fmt:message key="table.order.startDate"/></th>
-                                <th><fmt:message key="table.order.EndDate"/></th>
-                                <th><fmt:message key="table.order.orderDate"/></th>
-                                <th><fmt:message key="info.cars.driver"/></th>
-                                <th><fmt:message key="table.order.totalPrice"/></th>
-                                <th><fmt:message key="table.cars.status"/></th>
-                                <th><fmt:message key="check.comment"/></th>
-                                <th></th>
+                                <th style="width: 10%"></th>
+                                <th style="width: 10%"><fmt:message key="table.orders.car"/></th>
+                                <th style="width: 10%"><fmt:message key="table.order.startDate"/></th>
+                                <th style="width: 10%"><fmt:message key="table.order.EndDate"/></th>
+                                <th style="width: 10%"><fmt:message key="table.order.orderDate"/></th>
+                                <th style="width: 10%"><fmt:message key="info.cars.driver"/></th>
+                                <th style="width: 10%"><fmt:message key="table.order.totalPrice"/></th>
+                                <th style="width: 10%"><fmt:message key="table.cars.status"/></th>
+                                <th style="width: 10%"><fmt:message key="check.comment"/></th>
+                                <th style="width: 10%"></th>
                             </tr>
                             </thead>
                             <tbody>

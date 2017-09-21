@@ -1,6 +1,8 @@
 package com.litovchenko.carsapp.mySql;
 
 import com.litovchenko.carsapp.dao.*;
+import com.litovchenko.carsapp.service.ApplicationException;
+import org.apache.log4j.Logger;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -11,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySqlDAOFactory extends DAOFactory {
+
+    static final Logger LOGGER = Logger.getLogger(MySqlDAOFactory.class);
 
     private static DataSource dataSource;
     private Connection connection;
@@ -23,7 +27,8 @@ public class MySqlDAOFactory extends DAOFactory {
             Context envContext = (Context) initContext.lookup("java:/comp/env");
             dataSource = (DataSource) envContext.lookup("jdbc/mysql");
         } catch (NamingException e) {
-            throw new IllegalStateException("Missin JNDI", e);
+            LOGGER.error("Cannot find context or dataSource: " + e);
+            throw new ApplicationException(e);
         }
     }
 
@@ -41,7 +46,8 @@ public class MySqlDAOFactory extends DAOFactory {
             }
             connection = dataSource.getConnection();
         } catch (SQLException e) {
-            System.out.println("Cannot connect to database" + System.lineSeparator() + e);
+            LOGGER.error("Cannot connect to database: " + e);
+            throw new ApplicationException(e);
         }
         return connection;
     }
@@ -51,7 +57,8 @@ public class MySqlDAOFactory extends DAOFactory {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            System.out.println("Cannot start transaction" + System.lineSeparator() + e);
+            LOGGER.error("Cannot start transaction: " + e);
+            throw new ApplicationException(e);
         }
     }
 
@@ -60,7 +67,8 @@ public class MySqlDAOFactory extends DAOFactory {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            System.out.println("Cannot abort transaction" + System.lineSeparator() + e);
+            LOGGER.error("Cannot abort transaction: " + e);
+            throw new ApplicationException(e);
         }
     }
 
@@ -70,7 +78,8 @@ public class MySqlDAOFactory extends DAOFactory {
             connection.commit();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Cannot close MySqlDAOFactory" + System.lineSeparator() + e);
+            LOGGER.error("Cannot close MySqlDAOFactory: " + e);
+            throw new ApplicationException(e);
         }
     }
 
@@ -110,7 +119,7 @@ public class MySqlDAOFactory extends DAOFactory {
     }
 
     @Override
-    public RoleDAO getRoleDAO(){
+    public RoleDAO getRoleDAO() {
         return new MySqlRoleDAO(connection);
     }
 }

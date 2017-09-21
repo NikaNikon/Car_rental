@@ -205,18 +205,18 @@
     <c:otherwise>
     <div id="right" class="column">
 
-        <table class="table">
+        <table style="width: 100%" class="table">
             <thead class="thead-inverse">
             <tr>
-                <th></th>
-                <th><fmt:message key="info.checks.checkId"/></th>
-                <th><fmt:message key="info.checks.orderId"/></th>
-                <th><fmt:message key="info.checks.userId"/></th>
-                <th><fmt:message key="info.checks.carId"/></th>
-                <th><fmt:message key="info.checks.date"/></th>
-                <th><fmt:message key="check.price"/></th>
-                <th><fmt:message key="check.comment"/></th>
-                <th><fmt:message key="table.cars.status"/></th>
+                <th style="width: 11%"></th>
+                <th style="width: 11%"><fmt:message key="info.checks.checkId"/></th>
+                <th style="width: 11%"><fmt:message key="info.checks.orderId"/></th>
+                <th style="width: 11%"><fmt:message key="info.checks.userId"/></th>
+                <th style="width: 11%"><fmt:message key="info.checks.carId"/></th>
+                <th style="width: 11%"><fmt:message key="info.checks.date"/></th>
+                <th style="width: 11%"><fmt:message key="check.price"/></th>
+                <th style="width: 11%"><fmt:message key="check.comment"/></th>
+                <th style="width: 11%"><fmt:message key="table.cars.status"/></th>
             </tr>
             </thead>
             <tbody>
@@ -248,19 +248,19 @@
                 </c:when>
                 <c:otherwise>
                     <div id="right" class="column">
-                        <table class="table">
+                        <table  style="width: 100%" class="table">
                             <thead class="thead-inverse">
                             <tr>
-                                <th></th>
-                                <th><fmt:message key="info.checks.checkId"/></th>
-                                <th><fmt:message key="info.checks.orderId"/></th>
-                                <th><fmt:message key="info.checks.userId"/></th>
-                                <th><fmt:message key="info.checks.carId"/></th>
-                                <th><fmt:message key="info.checks.date"/></th>
-                                <th><fmt:message key="check.price"/></th>
-                                <th><fmt:message key="check.comment"/></th>
-                                <th><fmt:message key="table.cars.status"/></th>
-                                <th></th>
+                                <th style="width: 10%"></th>
+                                <th style="width: 10%"><fmt:message key="info.checks.checkId"/></th>
+                                <th style="width: 10%"><fmt:message key="info.checks.orderId"/></th>
+                                <th style="width: 10%"><fmt:message key="info.checks.userId"/></th>
+                                <th style="width: 10%"><fmt:message key="info.checks.carId"/></th>
+                                <th style="width: 10%"><fmt:message key="info.checks.date"/></th>
+                                <th style="width: 10%"><fmt:message key="check.price"/></th>
+                                <th style="width: 10%"><fmt:message key="check.comment"/></th>
+                                <th style="width: 10%"><fmt:message key="table.cars.status"/></th>
+                                <th style="width: 10%"></th>
                             </tr>
                             </thead>
                             <tbody>

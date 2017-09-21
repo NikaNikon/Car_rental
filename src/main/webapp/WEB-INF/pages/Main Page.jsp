@@ -19,7 +19,7 @@
 
         #container {
             padding-left: 200px;
-            padding-right: 190px;
+            padding-right: 40px;
         }
 
         #container .column {
@@ -39,7 +39,7 @@
         }
 
         #right {
-            width: 180px;
+            width: 100%;
             margin-right: -100%;
             margin-left: -15%;
         }
@@ -312,7 +312,6 @@
             <button style="width: 100%; font-size: 1.1em;" type="submit" class="btn btn-success">
                 <fmt:message key="button.cars.priceFilter"/></button>
             <hr>
-            <br>
             <button style="width: 100%;" type="submit" class="btn btn-success" name="clear" value="clear">
                 <fmt:message key="button.cars.clearFilters"/>
             </button>
@@ -343,18 +342,18 @@
             </table>
         </form>
 
-        <table class="table">
+        <table class="table" style="width: 150%">
             <form action="order" method="get">
                 <thead class="thead-inverse">
                 <tr>
-                    <th></th>
-                    <th><fmt:message key="table.cars.class"/></th>
-                    <th style="white-space: pre;"><fmt:message key="table.cars.fullName"/></th>
-                    <th style="white-space: pre;"><fmt:message key="table.cars.price"/></th>
-                    <th style="white-space: pre;"><fmt:message key="table.cars.driverPrice"/></th>
-                    <th><fmt:message key="table.cars.status"/></th>
-                    <th style="white-space: pre;"><fmt:message key="table.cars.description"/></th>
-                    <th></th>
+                    <th style="width: 12%"></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.class"/></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.fullName"/></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.price"/></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.driverPrice"/></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.status"/></th>
+                    <th style="width: 12%"><fmt:message key="table.cars.description"/></th>
+                    <th style="width: 12%"></th>
                 </tr>
                 </thead>
                 <tbody>

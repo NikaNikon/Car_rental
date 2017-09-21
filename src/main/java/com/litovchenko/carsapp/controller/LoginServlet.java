@@ -1,6 +1,7 @@
 package com.litovchenko.carsapp.controller;
 
 import com.litovchenko.carsapp.model.User;
+import com.litovchenko.carsapp.service.EmailSender;
 import com.litovchenko.carsapp.service.LoginService;
 import com.litovchenko.carsapp.service.OrdersService;
 import com.litovchenko.carsapp.service.UsersServise;
@@ -63,6 +64,9 @@ public class LoginServlet extends HttpServlet {
                         user = UsersServise.addUser(req.getParameter("login"), req.getParameter("email"),
                                 LoginService.hashPassword(req.getParameter("password")));
                         if (user != null) {
+
+                            EmailSender.sendEmail(req.getParameter("email"));
+
                             req.getSession().setAttribute("user", user);
                             req.getSession().setAttribute("msg",
                                     OrdersService.checkAbilityToMakeOrders(user));

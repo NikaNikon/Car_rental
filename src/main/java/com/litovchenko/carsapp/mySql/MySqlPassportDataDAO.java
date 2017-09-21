@@ -3,7 +3,6 @@ package com.litovchenko.carsapp.mySql;
 import com.litovchenko.carsapp.dao.PassportDataDAO;
 import com.litovchenko.carsapp.model.PassportData;
 
-import javax.persistence.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +39,7 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
     }
 
     @Override
-    public PassportData getByUserLogin(String login) {
+    public PassportData getByUserLogin(String login) throws SQLException {
         List<PassportData> list;
         String sql = SQL_SELECT_ALL_QUERY + COMA + USERS + " WHERE " + ID + " = " + USER_ID +
                 " AND " + LOGIN + EQ_PARAM;
@@ -77,62 +76,48 @@ public class MySqlPassportDataDAO extends MySqlGenericDAO<PassportData> implemen
     }
 
     @Override
-    public boolean insert(PassportData object) {
-        try(PreparedStatement pstm = con.prepareStatement(getInsertQuery())){
-            prepareStatementForInsert(pstm, object);
-            if(pstm.executeUpdate() == 1){
-                return true;
-            }
-        } catch (SQLException e){
-            System.out.println("Cannot insert object" + line_sep + e);
+    public boolean insert(PassportData object) throws SQLException {
+        PreparedStatement pstm = con.prepareStatement(getInsertQuery());
+        prepareStatementForInsert(pstm, object);
+        if (pstm.executeUpdate() == 1) {
+            return true;
         }
+        pstm.close();
         return false;
     }
 
     @Override
-    protected List<PassportData> parseResultSet(ResultSet rs) {
+    protected List<PassportData> parseResultSet(ResultSet rs) throws SQLException {
         List<PassportData> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                PassportData data = new PassportData(rs.getInt(USER_ID),
-                        rs.getString(FIRST_NAME), rs.getString(MIDDLE_NAME), rs.getString(LAST_NAME),
-                        rs.getDate(DATE_OF_BIRTH), rs.getString(PHONE));
-                list.add(data);
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        while (rs.next()) {
+            PassportData data = new PassportData(rs.getInt(USER_ID),
+                    rs.getString(FIRST_NAME), rs.getString(MIDDLE_NAME), rs.getString(LAST_NAME),
+                    rs.getDate(DATE_OF_BIRTH), rs.getString(PHONE));
+            list.add(data);
         }
         if (list.isEmpty()) {
-            return null;
+            list = null;
         }
         return list;
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, PassportData object) {
-        try {
-            st.setInt(1, object.getId());
-            st.setString(2, object.getFirstName());
-            st.setString(3, object.getMiddleName());
-            st.setString(4, object.getLastName());
-            st.setDate(5, object.getDateOfBirth());
-            st.setString(6, object.getPhone());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, PassportData object) throws SQLException {
+        st.setInt(1, object.getId());
+        st.setString(2, object.getFirstName());
+        st.setString(3, object.getMiddleName());
+        st.setString(4, object.getLastName());
+        st.setDate(5, object.getDateOfBirth());
+        st.setString(6, object.getPhone());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, PassportData object) {
-        try {
-            st.setString(1, object.getFirstName());
-            st.setString(2, object.getMiddleName());
-            st.setString(3, object.getLastName());
-            st.setDate(4, object.getDateOfBirth());
-            st.setString(5, object.getPhone());
-            st.setInt(6, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForUpdate(PreparedStatement st, PassportData object) throws SQLException {
+        st.setString(1, object.getFirstName());
+        st.setString(2, object.getMiddleName());
+        st.setString(3, object.getLastName());
+        st.setDate(4, object.getDateOfBirth());
+        st.setString(5, object.getPhone());
+        st.setInt(6, object.getId());
     }
 }

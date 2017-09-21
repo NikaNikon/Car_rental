@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(50) NOT NULL,
   `blocked` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `login_UNIQUE` (`login` ASC),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   INDEX `fk_users_roles_idx` (`roleId` ASC),
   CONSTRAINT `fk_users_roles`

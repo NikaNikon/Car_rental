@@ -3,7 +3,6 @@ package com.litovchenko.carsapp.mySql;
 import com.litovchenko.carsapp.dao.RepairmentCheckDAO;
 import com.litovchenko.carsapp.model.RepairmentCheck;
 
-import javax.persistence.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +44,7 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     }
 
     @Override
-    public List<RepairmentCheck> getByUserId(int id) {
+    public List<RepairmentCheck> getByUserId(int id) throws SQLException {
         List<RepairmentCheck> list;
         String sql = SELECT_BY_TEMPLATE + USER_ID + EQ_PARAM;
         list = getByIntParam(sql, id);
@@ -53,7 +52,7 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     }
 
     @Override
-    public List<RepairmentCheck> getByCarId(int id) {
+    public List<RepairmentCheck> getByCarId(int id) throws SQLException {
         List<RepairmentCheck> list;
         String sql = SELECT_BY_TEMPLATE + CAR_ID + EQ_PARAM;
         list = getByIntParam(sql, id);
@@ -61,7 +60,7 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     }
 
     @Override
-    public List<RepairmentCheck> getByStatus(RepairmentCheck.Status status) {
+    public List<RepairmentCheck> getByStatus(RepairmentCheck.Status status) throws SQLException {
         List<RepairmentCheck> list;
         String sql = SELECT_BY_TEMPLATE + CHECK_STATUS + EQ_PARAM;
         list = getByStringParam(sql, status.toString());
@@ -94,22 +93,18 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     }
 
     @Override
-    protected List<RepairmentCheck> parseResultSet(ResultSet rs) {
+    protected List<RepairmentCheck> parseResultSet(ResultSet rs) throws SQLException {
         List<RepairmentCheck> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                MySqlCarDAO carDAO = new MySqlCarDAO(con);
-                MySqlUserDAO userDAO = new MySqlUserDAO(con);
-                RepairmentCheck check = new RepairmentCheck(rs.getInt(ID), rs.getInt(ORDER_ID),
-                        rs.getInt(USER_ID), rs.getInt(CAR_ID), rs.getDate(CHECK_DATE),
-                        rs.getDouble(REPAIRMENT_PRICE), rs.getString(CHECK_COMMENT),
-                        RepairmentCheck.Status.valueOf(rs.getString(CHECK_STATUS)));
-                check.setCarName(carDAO.getById(rs.getInt(CAR_ID)).getFullName());
-                check.setUserLogin(userDAO.getById(rs.getInt(USER_ID)).getLogin());
-                list.add(check);
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        while (rs.next()) {
+            MySqlCarDAO carDAO = new MySqlCarDAO(con);
+            MySqlUserDAO userDAO = new MySqlUserDAO(con);
+            RepairmentCheck check = new RepairmentCheck(rs.getInt(ID), rs.getInt(ORDER_ID),
+                    rs.getInt(USER_ID), rs.getInt(CAR_ID), rs.getDate(CHECK_DATE),
+                    rs.getDouble(REPAIRMENT_PRICE), rs.getString(CHECK_COMMENT),
+                    RepairmentCheck.Status.valueOf(rs.getString(CHECK_STATUS)));
+            check.setCarName(carDAO.getById(rs.getInt(CAR_ID)).getFullName());
+            check.setUserLogin(userDAO.getById(rs.getInt(USER_ID)).getLogin());
+            list.add(check);
         }
         if (list.isEmpty()) {
             return null;
@@ -118,42 +113,31 @@ public class MySqlRepairmentCheckDAO extends MySqlGenericDAO<RepairmentCheck> im
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, RepairmentCheck object) {
-        try {
-            st.setInt(1, object.getOrderId());
-            st.setInt(2, object.getUserId());
-            st.setInt(3, object.getCarId());
-            st.setDate(4, object.getDate());
-            st.setDouble(5, object.getPrice());
-            st.setString(6, object.getComment());
-            st.setString(7, object.getStatus().toString());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, RepairmentCheck object) throws SQLException {
+        st.setInt(1, object.getOrderId());
+        st.setInt(2, object.getUserId());
+        st.setInt(3, object.getCarId());
+        st.setDate(4, object.getDate());
+        st.setDouble(5, object.getPrice());
+        st.setString(6, object.getComment());
+        st.setString(7, object.getStatus().toString());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, RepairmentCheck object) {
-        try {
-            prepareStatementForInsert(st, object);
-            st.setInt(8, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
-
+    protected void prepareStatementForUpdate(PreparedStatement st, RepairmentCheck object) throws SQLException {
+        prepareStatementForInsert(st, object);
+        st.setInt(8, object.getId());
     }
 
     @Override
-    public RepairmentCheck getByOrderId(int orderId) {
+    public RepairmentCheck getByOrderId(int orderId) throws SQLException {
         String sql = "SELECT * FROM " + REPAIRMENT_CHECKS + " WHERE " + ORDER_ID + EQ_PARAM;
-        try(PreparedStatement pstm = con.prepareStatement(sql)){
-            pstm.setInt(1, orderId);
-            if(parseResultSet(pstm.executeQuery()) == null){
-                return null;
-            }
-            return parseResultSet(pstm.executeQuery()).get(0);
-        } catch (SQLException e){
-            throw new PersistenceException(e);
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, orderId);
+        if (parseResultSet(pstm.executeQuery()) == null) {
+            return null;
         }
+        pstm.close();
+        return parseResultSet(pstm.executeQuery()).get(0);
     }
 }

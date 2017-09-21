@@ -2,10 +2,10 @@ package com.litovchenko.carsapp.controller;
 
 import com.litovchenko.carsapp.model.Car;
 import com.litovchenko.carsapp.model.User;
-import com.litovchenko.carsapp.service.CarClassesService;
-import com.litovchenko.carsapp.service.CarsService;
-import com.litovchenko.carsapp.service.OrdersService;
+import com.litovchenko.carsapp.service.*;
+import org.apache.log4j.Logger;
 
+import javax.persistence.PersistenceException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,9 +17,12 @@ import java.util.List;
 @WebServlet(name = "MainPageServlet", urlPatterns = {"/MainPageServlet", "/MainPageServlet/*"})
 public class MainPageServlet extends HttpServlet {
 
+    static final Logger LOGGER = Logger.getLogger(MainPageServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
         List<Car> list;
         if (req.getSession().getAttribute("cars") != null) {
             list = (List<Car>) req.getSession().getAttribute("cars");
@@ -50,7 +53,9 @@ public class MainPageServlet extends HttpServlet {
                 list = CarsService.pickByPrice(list,
                         Integer.parseInt(req.getParameter("minPrice")), "min");
             } catch (NumberFormatException e) {
-                System.out.println("Cannot do filter: min " + req.getParameter("minPrice"));
+                LOGGER.error("An exception occurred while processing invalid input of price filter " +
+                        "on main page: " + e);
+                throw new UserInputException(e);
             }
         }
         if (null != req.getParameter("maxPrice") && req.getParameter("maxPrice").length() > 0) {
@@ -58,7 +63,9 @@ public class MainPageServlet extends HttpServlet {
                 list = CarsService.pickByPrice(list,
                         Integer.parseInt(req.getParameter("maxPrice")), "max");
             } catch (NumberFormatException e) {
-                System.out.println("Cannot do filter: max " + req.getParameter("maxPrice"));
+                LOGGER.error("An exception occurred while processing invalid input of price filter " +
+                        "on main page: " + e);
+                throw new UserInputException(e);
             }
         }
         req.getSession().setAttribute("cars", list);

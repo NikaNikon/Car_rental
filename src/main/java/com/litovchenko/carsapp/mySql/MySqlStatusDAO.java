@@ -3,7 +3,6 @@ package com.litovchenko.carsapp.mySql;
 import com.litovchenko.carsapp.dao.StatusDAO;
 import com.litovchenko.carsapp.model.Status;
 
-import javax.persistence.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +33,7 @@ public class MySqlStatusDAO extends MySqlGenericDAO<Status> implements StatusDAO
     }
 
     @Override
-    public Status getByName(String statusName) {
+    public Status getByName(String statusName) throws SQLException {
         List<Status> list;
         String sql = "SELECT * FROM " + STATUSES + " WHERE " + ORDER_STATUS + EQ_PARAM;
         list = getByStringParam(sql, statusName);
@@ -70,38 +69,26 @@ public class MySqlStatusDAO extends MySqlGenericDAO<Status> implements StatusDAO
     }
 
     @Override
-    protected List<Status> parseResultSet(ResultSet rs) {
+    protected List<Status> parseResultSet(ResultSet rs) throws SQLException {
         List<Status> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                Status status = new Status(rs.getInt(ID), rs.getString(ORDER_STATUS));
-                list.add(status);
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        while (rs.next()) {
+            Status status = new Status(rs.getInt(ID), rs.getString(ORDER_STATUS));
+            list.add(status);
         }
         if (list.isEmpty()) {
-            return null;
+            list = null;
         }
         return list;
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, Status object) {
-        try {
-            st.setString(1, object.getStatus());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, Status object) throws SQLException {
+        st.setString(1, object.getStatus());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, Status object) {
-        try {
-            st.setString(1, object.getStatus());
-            st.setInt(2, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForUpdate(PreparedStatement st, Status object) throws SQLException {
+        st.setString(1, object.getStatus());
+        st.setInt(2, object.getId());
     }
 }

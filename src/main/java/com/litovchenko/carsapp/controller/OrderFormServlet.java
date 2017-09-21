@@ -4,6 +4,7 @@ import com.litovchenko.carsapp.model.Car;
 import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.CarsService;
 import com.litovchenko.carsapp.service.OrdersService;
+import com.litovchenko.carsapp.service.TwilioSender;
 import com.litovchenko.carsapp.service.UsersServise;
 
 import javax.servlet.ServletException;
@@ -65,6 +66,8 @@ public class OrderFormServlet extends HttpServlet {
                         Car.Status.AVAILABLE);
                 resp.sendRedirect("ErrPage.jsp");
             } else {
+                TwilioSender.send(req.getParameter("phone"));
+
                 req.getSession().setAttribute("cars", null);
                 req.getSession().setAttribute("user",
                         UsersServise.getUser(((User) (req.getSession().getAttribute("user"))).getId()));

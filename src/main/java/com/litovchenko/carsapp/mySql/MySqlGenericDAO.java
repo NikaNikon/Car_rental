@@ -1,10 +1,8 @@
 package com.litovchenko.carsapp.mySql;
 
 import com.litovchenko.carsapp.dao.GenericDAO;
-import com.litovchenko.carsapp.model.Car;
 import com.litovchenko.carsapp.model.Identified;
 
-import javax.persistence.PersistenceException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,11 +23,11 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
 
     protected abstract String getUpdateQuery();
 
-    protected abstract List<T> parseResultSet(ResultSet rs);
+    protected abstract List<T> parseResultSet(ResultSet rs) throws SQLException;
 
-    protected abstract void prepareStatementForInsert(PreparedStatement st, T object);
+    protected abstract void prepareStatementForInsert(PreparedStatement st, T object) throws SQLException;
 
-    protected abstract void prepareStatementForUpdate(PreparedStatement st, T object);
+    protected abstract void prepareStatementForUpdate(PreparedStatement st, T object) throws SQLException;
 
     protected static final String line_sep = System.lineSeparator();
 
@@ -44,98 +42,83 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
     }
 
     @Override
-    public T getById(Integer id) {
+    public T getById(Integer id) throws SQLException {
         T obj = null;
-        try (PreparedStatement pstm = con.prepareStatement(getSelectQuery())) {
-            pstm.setInt(1, id);
-            ResultSet rs = pstm.executeQuery();
-            List<T> list = parseResultSet(rs);
-            if(list!=null) {
-                obj = list.get(0);
-            }
-        } catch (SQLException e) {
-            System.out.println("Cannot get object by id" + line_sep + e);
+        PreparedStatement pstm = con.prepareStatement(getSelectQuery());
+        pstm.setInt(1, id);
+        ResultSet rs = pstm.executeQuery();
+        List<T> list = parseResultSet(rs);
+        if (list != null) {
+            obj = list.get(0);
         }
+        pstm.close();
         return obj;
     }
 
     @Override
-    public boolean insert(T object) {
-        try (PreparedStatement pstm = con.prepareStatement(getInsertQuery(),
-                PreparedStatement.RETURN_GENERATED_KEYS)) {
-            prepareStatementForInsert(pstm, object);
-            pstm.executeUpdate();
-            ResultSet rs = pstm.getGeneratedKeys();
-            if (rs.next()) {
-                object.setId(rs.getInt(1));
-                return true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Cannot insert object" + line_sep + e);
+    public boolean insert(T object) throws SQLException {
+        PreparedStatement pstm = con.prepareStatement(getInsertQuery(),
+                PreparedStatement.RETURN_GENERATED_KEYS);
+        prepareStatementForInsert(pstm, object);
+        pstm.executeUpdate();
+        ResultSet rs = pstm.getGeneratedKeys();
+        if (rs.next()) {
+            object.setId(rs.getInt(1));
+            return true;
         }
+        pstm.close();
         return false;
     }
 
     @Override
-    public boolean update(T object) {
-        try (PreparedStatement pstm = con.prepareStatement(getUpdateQuery())) {
-            prepareStatementForUpdate(pstm, object);
-            if (pstm.executeUpdate() > 0) {
-                return true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Cannot update object" + line_sep + e);
-            return false;
+    public boolean update(T object) throws SQLException {
+        PreparedStatement pstm = con.prepareStatement(getUpdateQuery());
+        prepareStatementForUpdate(pstm, object);
+        if (pstm.executeUpdate() > 0) {
+            return true;
         }
+        pstm.close();
         return false;
     }
 
     @Override
-    public boolean deleteById(int id) {
-        try (PreparedStatement pstm = con.prepareStatement(getDeleteQuery())) {
-            pstm.setInt(1, id);
-            if(pstm.executeUpdate()==1){
-                return true;
-            }
-        } catch (SQLException e) {
-            System.out.println("Cannot delete object" + line_sep + e);
+    public boolean deleteById(int id) throws SQLException {
+        PreparedStatement pstm = con.prepareStatement(getDeleteQuery());
+        pstm.setInt(1, id);
+        if (pstm.executeUpdate() == 1) {
+            return true;
         }
+        pstm.close();
         return false;
     }
 
     @Override
-    public List<T> getAll() {
+    public List<T> getAll() throws SQLException {
         List<T> list = null;
-        try (PreparedStatement pstm = con.prepareStatement(getSelectAllQuery())) {
-            ResultSet rs = pstm.executeQuery();
-            list = parseResultSet(rs);
-        } catch (SQLException e) {
-            System.out.println("Cannot get all from table" + line_sep + e);
-        }
+        PreparedStatement pstm = con.prepareStatement(getSelectAllQuery());
+        ResultSet rs = pstm.executeQuery();
+        list = parseResultSet(rs);
+        pstm.close();
         return list;
     }
 
-    protected List<T> getByStringParam(String sql, String value) {
+    protected List<T> getByStringParam(String sql, String value) throws SQLException {
         List<T> list;
-        try (PreparedStatement pstm = con.prepareStatement(sql)) {
-            pstm.setString(1, value);
-            ResultSet rs = pstm.executeQuery();
-            list = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setString(1, value);
+        ResultSet rs = pstm.executeQuery();
+        list = parseResultSet(rs);
+        pstm.close();
         return list;
     }
 
-    protected List<T> getByIntParam(String sql, int value) {
+    protected List<T> getByIntParam(String sql, int value) throws SQLException {
         List<T> list;
-        try (PreparedStatement pstm = con.prepareStatement(sql)) {
-            pstm.setInt(1, value);
-            ResultSet rs = pstm.executeQuery();
-            list = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, value);
+        ResultSet rs = pstm.executeQuery();
+        list = parseResultSet(rs);
+        pstm.close();
         return list;
     }
 }

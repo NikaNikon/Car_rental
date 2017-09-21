@@ -4,7 +4,6 @@ import com.litovchenko.carsapp.dao.UserDAO;
 import com.litovchenko.carsapp.model.Role;
 import com.litovchenko.carsapp.model.User;
 
-import javax.persistence.PersistenceException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,32 +38,23 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
     }
 
     @Override
-    public User getByLogin(String login, String password) {
+    public User getByLogin(String login, String password) throws SQLException {
         User user = null;
         String sql = SELECT_BY_TEMPLATE + LOGIN + " LIKE ?" + " AND " + PASSWORD + " LIKE ? ";
-        try (PreparedStatement pstm = con.prepareStatement(sql)) {
-            pstm.setString(1, login);
-            pstm.setString(2, password);
-            ResultSet rs = pstm.executeQuery();
-            List<User> list = parseResultSet(rs);
-            if(list!=null){
-                user = list.get(0);
-            }
-            /*if (rs.next()) {
-                MySqlPassportDataDAO passportDataDAO = new MySqlPassportDataDAO(con);
-                //get role dao here
-                user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
-                        rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
-                user.setPassportData(passportDataDAO.getByUserLogin(login));
-            }*/
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setString(1, login);
+        pstm.setString(2, password);
+        ResultSet rs = pstm.executeQuery();
+        List<User> list = parseResultSet(rs);
+        if (list != null) {
+            user = list.get(0);
         }
+        pstm.close();
         return user;
     }
 
     @Override
-    public List<User> getByRole(String role) {
+    public List<User> getByRole(String role) throws SQLException {
         List<User> list;
         String sql = SQL_SELECT_ALL_QUERY + COMA + ROLES + " WHERE " + ROLES + "." + ID + " = " + USER_ROLE_ID +
                 " AND " + ROLE_NAME + " LIKE ?";
@@ -73,16 +63,14 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
     }
 
     @Override
-    public List<User> getDeptors() {
+    public List<User> getDeptors() throws SQLException {
         List<User> list;
         String sql = SQL_SELECT_ALL_QUERY + COMA + REPAIRMENT_CHECKS + " WHERE " +
                 USER_ID + " = " + USERS + "." + ID + " AND " + CHECK_STATUS + " LIKE \"UNPAYED\"";
-        try (Statement stm = con.createStatement()) {
-            ResultSet rs = stm.executeQuery(sql);
-            list = parseResultSet(rs);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery(sql);
+        list = parseResultSet(rs);
+        stm.close();
         return list;
     }
 
@@ -112,85 +100,70 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
     }
 
     @Override
-    protected List<User> parseResultSet(ResultSet rs) {
+    protected List<User> parseResultSet(ResultSet rs) throws SQLException {
         List<User> list = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                MySqlPassportDataDAO passportDataDAO = new MySqlPassportDataDAO(con);
-                MySqlRoleDAO roleDAO = new MySqlRoleDAO(con);
-                User user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
-                        rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
-                user.setPassportData(passportDataDAO.getById(rs.getInt(ID)));
-                Role role = roleDAO.getById(rs.getInt(USER_ROLE_ID));
-                if(role!=null) {
-                    user.setRole(role.getRoleName());
-                }
-                list.add(user);
+        while (rs.next()) {
+            MySqlPassportDataDAO passportDataDAO = new MySqlPassportDataDAO(con);
+            MySqlRoleDAO roleDAO = new MySqlRoleDAO(con);
+            User user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
+                    rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
+            user.setPassportData(passportDataDAO.getById(rs.getInt(ID)));
+            Role role = roleDAO.getById(rs.getInt(USER_ROLE_ID));
+            if (role != null) {
+                user.setRole(role.getRoleName());
             }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+            list.add(user);
         }
+
         if (list.isEmpty()) {
-            return null;
+            list = null;
         }
         return list;
     }
 
     @Override
-    protected void prepareStatementForInsert(PreparedStatement st, User object) {
-        try {
-            st.setString(1, object.getLogin());
-            st.setString(2, object.getPassword());
-            st.setString(3, object.getEmail());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForInsert(PreparedStatement st, User object) throws SQLException {
+        st.setString(1, object.getLogin());
+        st.setString(2, object.getPassword());
+        st.setString(3, object.getEmail());
     }
 
     @Override
-    protected void prepareStatementForUpdate(PreparedStatement st, User object) {
-        try {
-            st.setInt(1, object.getRoleId());
-            st.setString(2, object.getLogin());
-            st.setString(3, object.getPassword());
-            st.setString(4, object.getEmail());
-            st.setBoolean(5, object.isBlocked());
-            st.setInt(6, object.getId());
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        }
+    protected void prepareStatementForUpdate(PreparedStatement st, User object) throws SQLException {
+        st.setInt(1, object.getRoleId());
+        st.setString(2, object.getLogin());
+        st.setString(3, object.getPassword());
+        st.setString(4, object.getEmail());
+        st.setBoolean(5, object.isBlocked());
+        st.setInt(6, object.getId());
     }
 
     @Override
-    public boolean updateBlockedStatus(boolean isBlocked, int id) {
-        int blocked = isBlocked == true? 1 : 0;
+    public boolean updateBlockedStatus(boolean isBlocked, int id) throws SQLException {
+        int blocked = isBlocked == true ? 1 : 0;
         String sql = "UPDATE " + USERS + " SET " + BLOCKED + " = " + blocked +
                 " WHERE " + ID + " = " + id;
-        try(PreparedStatement pstm = con.prepareStatement(sql)){
-            if(pstm.executeUpdate() == 1){
-                return true;
-            }
-        } catch (SQLException e){
-            throw new PersistenceException(e);
+        PreparedStatement pstm = con.prepareStatement(sql);
+        if (pstm.executeUpdate() == 1) {
+            return true;
         }
+        pstm.close();
         return false;
     }
 
     @Override
-    public boolean insertWithRole(User user) {
+    public boolean insertWithRole(User user) throws SQLException {
         String sql = "INSERT INTO " + USERS + "(" + ID + COMA + USER_ROLE_ID + COMA + LOGIN + COMA
                 + PASSWORD + COMA + EMAIL + COMA + BLOCKED + ") VALUES (DEFAULT, ?, ?, ?, ?, DEFAULT)";
-        try(PreparedStatement pstm = con.prepareStatement(sql)){
-            pstm.setInt(1, user.getRoleId());
-            pstm.setString(2, user.getLogin());
-            pstm.setString(3, user.getPassword());
-            pstm.setString(4, user.getEmail());
-            if(pstm.executeUpdate() == 1){
-                return true;
-            }
-        } catch (SQLException e){
-            throw new PersistenceException(e);
+        PreparedStatement pstm = con.prepareStatement(sql);
+        pstm.setInt(1, user.getRoleId());
+        pstm.setString(2, user.getLogin());
+        pstm.setString(3, user.getPassword());
+        pstm.setString(4, user.getEmail());
+        if (pstm.executeUpdate() == 1) {
+            return true;
         }
+        pstm.close();
         return false;
     }
 }

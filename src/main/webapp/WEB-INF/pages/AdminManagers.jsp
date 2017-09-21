@@ -82,6 +82,14 @@
             border-radius: 0
         }
 
+        table{
+            width: 100%;
+        }
+
+        th{
+            width: 16%;
+        }
+
     </style>
 
     <script type="text/javascript">

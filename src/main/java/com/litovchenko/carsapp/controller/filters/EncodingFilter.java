@@ -1,4 +1,4 @@
-package com.litovchenko.carsapp.controller;
+package com.litovchenko.carsapp.controller.filters;
 
 import javax.servlet.*;
 import java.io.IOException;

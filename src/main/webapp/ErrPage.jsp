@@ -25,7 +25,7 @@
         <div class="row text-center">
             <div class="col-sm-6 col-sm-offset-3">
                 <br><br> <h2 style="color:#E10909"><fmt:message key="errMsg"/> </h2>
-                <img src="img/err.png">
+                <img src="img/dafaultErr.png">
                 <br><br>
                 <a href="/MainPageServlet" class="btn btn-success"><fmt:message key="button.mainPage"/></a>
             </div>

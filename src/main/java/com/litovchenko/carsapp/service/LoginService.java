@@ -1,23 +1,26 @@
 package com.litovchenko.carsapp.service;
 
 import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.log4j.Logger;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class LoginService {
 
+    static final Logger LOGGER = Logger.getLogger(LoginService.class);
+
     public static String validateData(String login, String email, String password, String confirmPassword) {
-        if(!password.equals(confirmPassword)){
+        if (!password.equals(confirmPassword)) {
             return "Passwords don't match.";
         }
-        if(!login.matches("([A-Za-z0-9_]+){5,15}")){
-         return "Login is not valid.";
+        if (!login.matches("([A-Za-z0-9_]+){5,15}")) {
+            return "Login is not valid.";
         }
-        if(!EmailValidator.getInstance().isValid(email)){
+        if (!EmailValidator.getInstance().isValid(email)) {
             return "Email is not valid.";
         }
-        if(!password.matches("([A-Za-z0-9_]+){5,15}")){
+        if (!password.matches("([A-Za-z0-9_]+){5,15}")) {
             return "Password is not valid.";
         }
         return "OK";
@@ -35,7 +38,8 @@ public class LoginService {
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            System.out.println("Cannot find algorithm to hash the password" + System.lineSeparator() + e);
+            LOGGER.error("Cannot find algorithm to hash password: " + e);
+            throw new ApplicationException(e);
         }
         return generatedPassword;
     }
