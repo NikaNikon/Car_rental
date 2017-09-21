@@ -1,4 +1,8 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
@@ -25,9 +29,9 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-sm-6 col-sm-offset-3">
-                <h2 style="color:#0fad00">Your order was successfully registered, wait for confirmation.</h2>
+                <h2 style="color:#0fad00"><fmt:message key="successOrderMsg"/> </h2>
                 <img src="img/orderSuccess.png"><br><br>
-                <a href="/MainPageServlet" class="btn btn-success">Main page</a>
+                <a href="/MainPageServlet" class="btn btn-success"><fmt:message key="button.mainPage"/> </a>
                 <br><br>
             </div>
 

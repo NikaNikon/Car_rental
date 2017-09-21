@@ -1,11 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/></title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
     <style type="text/css">
         #container {
             padding-left: 40px;
@@ -110,41 +116,61 @@
 </head>
 <body>
 <header id="header">
-    <form action="MainPageServlet" method="get">
-        <button class="btn-link">"Wheels" rental service</button>
-    </form>
+    <div style="display: inline-block">
+        <form action="MainPageServlet" method="get">
+            <button class="btn-link"><fmt:message key="companyName"/></button>
+        </form>
+    </div>
+
+    <div style="display: inline-block;" class="dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle">
+            <img src="../../img/langIcon.png">
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu " style="width: 25px">
+            <li>
+                <a href="lang?locale=en"><img src="../../img/langIcon_eng.png">
+                    <fmt:message key="lang.en"/>
+                </a></li>
+            <li>
+                <a href="lang?locale=ru"><img src="../../img/langIcon_ru.png">
+                    <fmt:message key="lang.ru"/>
+                </a></li>
+        </ul>
+    </div>
     <div>
         <div style="margin-left: 75%">
-            <form action="login" method="post">You signed in as ${sessionScope.user.login}
+            <form action="login" method="post"><fmt:message key="info.signInInfoForUser"/>
+                ${sessionScope.user.login}
                 <button type="submit" class="btn btn-success" name="action" value="logout"
-                        style="background-color:#3B3B3B;border-color:#3B3B3B;">Log out
+                        style="background-color:#3B3B3B;border-color:#3B3B3B;"><fmt:message key="button.logOut"/>
                 </button>
             </form>
         </div>
         <c:choose>
             <c:when test="${sessionScope.user.role eq 'MANAGER'}">
-                <div style="margin-left: 78%">
+                <div  align="right" style="margin-right: 3%">
                     <form action="managerServlet" method="get">
                         <button type="submit" class="btn btn-success" name="action"
-                                value="orders">Orders
+                                value="orders"><fmt:message key="button.manager.orders"/>
                         </button>
                         <button type="submit" class="btn btn-success" name="action"
-                                value="checks">Repairment checks
+                                value="checks"><fmt:message key="button.manager.checks"/>
                         </button>
                     </form>
                 </div>
             </c:when>
             <c:otherwise>
-                <div style="margin-left: 75%">
+                <div  align="right" style="margin-right: 3%">
                     <form action="user" method="get">
                         <button type="submit" class="btn btn-success" name="action"
-                                value="orders">Orders
+                                value="orders"><fmt:message key="button.user.orders"/>
                         </button>
                         <button type="submit" class="btn btn-success" name="action"
-                                value="checks">Checks
+                                value="checks"><fmt:message key="button.user.checks"/>
                         </button>
                         <button type="submit" class="btn btn-success" name="action"
-                                value="personalPage">Personal page
+                                value="personalPage"><fmt:message key="button.user.personalPage"/>
                         </button>
                     </form>
                 </div>
@@ -155,16 +181,16 @@
 <div id="container">
     <main id="center" class="column">
         <article>
-            <h1>Repairment checks</h1>
+            <h1><fmt:message key="button.user.checks"/></h1>
         </article>
     </main>
     <div>
         <form action="check" method="get">
             <button class="btn btn-success" type="submit" name="action"
-                    value="unpayed"> Unpayed checks
+                    value="unpayed"><fmt:message key="info.checks.unpayed"/>
             </button>
             <button class="btn btn-success" type="submit" name="action"
-                    value="all"> All checks
+                    value="all"> <fmt:message key="button.orders.all"/>
             </button>
         </form>
     </div>
@@ -173,7 +199,7 @@
     <c:choose>
     <c:when test="${requestScope.checks eq null}">
         <div id="right" class="column">
-            <div class="alert alert-info">No unpayed checks</div>
+            <div class="alert alert-info"><fmt:message key="info.noChecks"/></div>
         </div>
     </c:when>
     <c:otherwise>
@@ -183,14 +209,14 @@
             <thead class="thead-inverse">
             <tr>
                 <th></th>
-                <th>Check id</th>
-                <th>Order id</th>
-                <th>User id</th>
-                <th>Car id</th>
-                <th>Check date</th>
-                <th>Price</th>
-                <th>Comment</th>
-                <th>Status</th>
+                <th><fmt:message key="info.checks.checkId"/></th>
+                <th><fmt:message key="info.checks.orderId"/></th>
+                <th><fmt:message key="info.checks.userId"/></th>
+                <th><fmt:message key="info.checks.carId"/></th>
+                <th><fmt:message key="info.checks.date"/></th>
+                <th><fmt:message key="check.price"/></th>
+                <th><fmt:message key="check.comment"/></th>
+                <th><fmt:message key="table.cars.status"/></th>
             </tr>
             </thead>
             <tbody>
@@ -217,7 +243,7 @@
             <c:choose>
                 <c:when test="${requestScope.checks eq null}">
                     <div id="right" class="column">
-                        <div class="alert alert-info">No unpayed checks</div>
+                        <div class="alert alert-info"><fmt:message key="info.noChecks"/></div>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -226,14 +252,14 @@
                             <thead class="thead-inverse">
                             <tr>
                                 <th></th>
-                                <th>Check id</th>
-                                <th>Order id</th>
-                                <th>User id</th>
-                                <th>Car id</th>
-                                <th>Check date</th>
-                                <th>Price</th>
-                                <th>Comment</th>
-                                <th>Status</th>
+                                <th><fmt:message key="info.checks.checkId"/></th>
+                                <th><fmt:message key="info.checks.orderId"/></th>
+                                <th><fmt:message key="info.checks.userId"/></th>
+                                <th><fmt:message key="info.checks.carId"/></th>
+                                <th><fmt:message key="info.checks.date"/></th>
+                                <th><fmt:message key="check.price"/></th>
+                                <th><fmt:message key="check.comment"/></th>
+                                <th><fmt:message key="table.cars.status"/></th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -254,7 +280,9 @@
                                         <c:when test="${check.status eq 'UNPAYED'}">
                                             <form action="check" method="post">
                                                 <button class="btn btn-success" type="submit"
-                                                        name="action" value="pay_${check.id}">Pay</button>
+                                                        name="action" value="pay_${check.id}">
+                                                    <fmt:message key="button.check.pay"/>
+                                                </button>
                                             </form>
                                         </c:when>
                                     </c:choose>
@@ -271,7 +299,7 @@
     </div>
 </div>
 <div id="footer-wrapper" align="center">
-    <jsp:include page="Footer.jsp"></jsp:include>
+    <jsp:include page="fragments/Footer.jsp"></jsp:include>
 </div>
 </body>
 </html>

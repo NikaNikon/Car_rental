@@ -84,13 +84,11 @@ public class OrdersService {
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            if (birth.after(sdf.parse(getMaxDateOfBirth()))) {
-                return false;
-            }
-            if (start.before(sdf.parse(getDaysAfterToday(1)))) {
-                return false;
-            }
-            if (end.before(start)) {
+            if (birth.after(sdf.parse(getMaxDateOfBirth())) ||
+                    start.before(sdf.parse(getDaysAfterToday(1))) ||
+                    start.after(sdf.parse(getDaysAfterToday(3))) ||
+                    end.before(start) ||
+                    start.equals(end)) {
                 return false;
             }
         } catch (ParseException e) {

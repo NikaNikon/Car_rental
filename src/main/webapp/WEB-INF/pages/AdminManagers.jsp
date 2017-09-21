@@ -1,11 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/> </title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
     <style type="text/css">
         #container {
             padding-left: 40px;
@@ -87,27 +93,47 @@
 </head>
 <body>
 <header id="header">
-    <form action="MainPageServlet" method="get">
-        <button class="btn-link">"Wheels" rental service</button>
-    </form>
+    <div style="display: inline-block">
+        <form action="MainPageServlet" method="get">
+            <button class="btn-link"><fmt:message key="companyName"/></button>
+        </form>
+    </div>
+
+    <div style="display: inline-block;" class="dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle">
+            <img src="../../img/langIcon.png">
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu " style="width: 25px">
+            <li>
+                <a href="lang?locale=en"><img src="../../img/langIcon_eng.png">
+                    <fmt:message key="lang.en"/>
+                </a></li>
+            <li>
+                <a href="lang?locale=ru"><img src="../../img/langIcon_ru.png">
+                    <fmt:message key="lang.ru"/>
+                </a></li>
+        </ul>
+    </div>
+
     <div>
         <div style="margin-left: 75%">
             <form action="login" method="post">You signed in as ${sessionScope.user.login}
                 <button type="submit" class="btn btn-success" name="action" value="logout"
-                        style="background-color:#3B3B3B;border-color:#3B3B3B;">Log out
+                        style="background-color:#3B3B3B;border-color:#3B3B3B;"><fmt:message key="button.logOut"/>
                 </button>
             </form>
         </div>
-        <div style="margin-left: 75%">
+        <div align="right" style="margin-right: 3%">
             <form action="admin" method="get">
                 <button type="submit" class="btn btn-success" name="action"
-                        value="cars">Cars
+                        value="cars"><fmt:message key="button.admin.cars"/>
                 </button>
                 <button type="submit" class="btn btn-success" name="action"
-                        value="users">Users
+                        value="users"><fmt:message key="button.admin.users"/>
                 </button>
                 <button type="submit" class="btn btn-success" name="action"
-                        value="manager">Managers
+                        value="managers"><fmt:message key="button.admin.managers"/>
                 </button>
             </form>
         </div>
@@ -117,14 +143,14 @@
 <div id="container">
     <main id="center" class="column">
         <article>
-            <h1></h1>
+            <h1><fmt:message key="button.admin.managers"/></h1>
         </article>
     </main>
 
     <div>
         <form action="adminUsers" method="get">
             <button class="btn btn-success" type="submit" name="action"
-                    value="newManager"> + Register new manager
+                    value="newManager"> <fmt:message key="button.admin.newManager"/>
             </button>
         </form>
     </div>
@@ -135,10 +161,10 @@
             <thead class="thead-inverse">
             <tr>
                 <th></th>
-                <th>Login</th>
-                <th style="white-space: pre;">Role</th>
-                <th style="white-space: pre;">Email</th>
-                <th style="white-space: pre;">Status</th>
+                <th><fmt:message key="table.user.login"/> </th>
+                <th style="white-space: pre;"><fmt:message key="table.user.role"/> </th>
+                <th style="white-space: pre;"><fmt:message key="table.user.email"/> </th>
+                <th style="white-space: pre;"><fmt:message key="table.user.status"/> </th>
                 <th></th>
             </tr>
             </thead>
@@ -151,10 +177,10 @@
                     <td><c:out value="${current.email}"/></td>
                     <c:choose>
                         <c:when test="${current.blocked eq true}">
-                            <td>Blocked</td>
+                            <td><fmt:message key="table.user.blocked"/></td>
                         </c:when>
                         <c:otherwise>
-                            <td>Active</td>
+                            <td><fmt:message key="table.user.active"/></td>
                         </c:otherwise>
                     </c:choose>
 
@@ -163,12 +189,14 @@
                             <c:choose>
                                 <c:when test="${current.blocked eq true}">
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="unblock_${current.id}"> Unblock
+                                            value="unblock_${current.id}">
+                                        <fmt:message key="button.user.unblock"/>
                                     </button>
                                 </c:when>
                                 <c:otherwise>
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="block_${current.id}"> Block
+                                            value="block_${current.id}">
+                                        <fmt:message key="button.user.block"/>
                                     </button>
                                 </c:otherwise>
                             </c:choose>
@@ -176,7 +204,7 @@
                         <br>
                         <form onsubmit="ensure();" action="adminUsers" method="post">
                             <button class="btn btn-success" type="submit" name="action"
-                                    value="delete_${current.id}"> Delete
+                                    value="delete_${current.id}"> <fmt:message key="button.admin.delete"/>
                             </button>
                         </form>
                     </td>
@@ -187,7 +215,7 @@
     </div>
 </div>
 <div id="footer-wrapper" align="center">
-    <jsp:include page="Footer.jsp"></jsp:include>
+    <jsp:include page="fragments/Footer.jsp"></jsp:include>
 </div>
 </body>
 </html>

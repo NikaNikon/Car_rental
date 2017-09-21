@@ -1,11 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/> </title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -136,7 +139,8 @@
             <c:when test="${requestScope.msg ne null}">
                 <hr>
                 <div class="alert alert-danger">
-                    <strong>Oops! </strong>${requestScope.msg} Please, try again.
+                    <strong><fmt:message key="info.oops"/> </strong>${requestScope.msg}
+                    <fmt:message key="info.tryAgain"/>
                 </div>
                 <hr>
             </c:when>
@@ -146,20 +150,21 @@
                 <form class="form-signin" action="adminUsers" method="post">
                     <span id="reauth-emaill" class="reauth-email"></span>
                     <input type="text" id="inputLoginn" class="form-control" pattern="([A-Za-z0-9_]+){5,15}"
-                           placeholder="  Login" required autofocus name="login">
-                    <input type="email" id="inputEmaill" class="form-control" placeholder="  Email" required name="email">
+                           placeholder="  <fmt:message key="field.login"/>" required autofocus name="login">
+                    <input type="email" id="inputEmaill" class="form-control"
+                           placeholder="  <fmt:message key="table.user.email"/>" required name="email">
                     <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="inputPasswordd" class="form-control"
-                           placeholder="  Password (5 to 15 characters)" required name="password">
+                           placeholder="  <fmt:message key="field.reg.password"/>" required name="password">
                     <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="confirmPasswordd" class="form-control"
-                           placeholder="  Confirm password" required name="confirmPassword">
+                           placeholder="  <fmt:message key="field.confirmPassword"/>" required name="confirmPassword">
                     <hr>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="register">Register
+                            name="action" value="register"><fmt:message key="button.register"/>
                     </button>
                 </form>
                 <form class="form-signin" action="adminUsers" method="get">
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="back">Back to managers
+                            name="action" value="back"><fmt:message key="button.back"/>
                     </button>
                 </form>
             </c:when>
@@ -167,20 +172,21 @@
                 <form class="form-signin" action="login" method="post">
                     <span id="reauth-email" class="reauth-email"></span>
                     <input type="text" id="inputLogin" class="form-control" pattern="([A-Za-z0-9_]+){5,15}"
-                           placeholder="  Login" required autofocus name="login">
-                    <input type="email" id="inputEmail" class="form-control" placeholder="  Email" required name="email">
+                           placeholder="  <fmt:message key="field.login"/>" required autofocus name="login">
+                    <input type="email" id="inputEmail" class="form-control"
+                           placeholder="  <fmt:message key="table.user.email"/>" required name="email">
                     <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="inputPassword" class="form-control"
-                           placeholder="  Password (5 to 15 characters)" required name="password">
+                           placeholder="  <fmt:message key="field.reg.password"/>" required name="password">
                     <input type="password" pattern="([A-Za-z0-9_]+){5,15}" id="confirmPassword" class="form-control"
-                           placeholder="  Confirm password" required name="confirmPassword">
+                           placeholder="  <fmt:message key="field.confirmPassword"/>" required name="confirmPassword">
                     <hr>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="register">Register
+                            name="action" value="register"><fmt:message key="button.register"/>
                     </button>
                 </form>
                 <form class="form-signin" action="login" method="get">
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="home">Main page
+                            name="action" value="home"><fmt:message key="button.mainPage"/>
                     </button>
                 </form>
             </c:otherwise>

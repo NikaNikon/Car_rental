@@ -32,6 +32,7 @@ public class UsersServise {
         if(!dao.insert(user)){
             user = null;
         }
+        user = dao.getById(user.getId());
         closeDaoFactory(factory);
         return user;
     }

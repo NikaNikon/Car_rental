@@ -1,6 +1,8 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
-
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
@@ -22,10 +24,10 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-sm-6 col-sm-offset-3">
-                <br><br> <h2 style="color:#E10909">Oops, something went wrong</h2>
+                <br><br> <h2 style="color:#E10909"><fmt:message key="errMsg"/> </h2>
                 <img src="img/err.png">
                 <br><br>
-                <a href="/MainPageServlet" class="btn btn-success">Back to main page</a>
+                <a href="/MainPageServlet" class="btn btn-success"><fmt:message key="button.mainPage"/></a>
             </div>
 
         </div>

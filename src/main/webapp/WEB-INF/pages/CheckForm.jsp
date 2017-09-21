@@ -1,11 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/></title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -144,24 +147,24 @@
 
                 <form class="form-signin" action="check" method="post">
                     <span id="reauth-email" class="reauth-email"></span>
-                    <label for="price"> Price </label>
+                    <label for="price"> <fmt:message key="check.price"/> </label>
                     <input type="number" class="form-control" required autofocus
                            name="price" id="price">
 
-                    <label for="comment"> Comment </label>
+                    <label for="comment"> <fmt:message key="check.comment"/> </label>
                     <textarea class="form-control" rows="6" required name="comment" id="comment"></textarea><br>
 
                     <input type="hidden" name="orderId" value="${requestScope.orderId}">
 
                     <hr>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="save">Save
+                            name="action" value="save"><fmt:message key="button.save"/>
                     </button>
                 </form>
 
                 <form class="form-signin" action="carForm" method="post">
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="back">Back to cars
+                            name="action" value="back"><fmt:message key="button.back"/>
                     </button>
                 </form>
 

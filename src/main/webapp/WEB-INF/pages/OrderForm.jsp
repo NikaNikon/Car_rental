@@ -1,10 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/></title>
 
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/pickaday.css">
@@ -130,7 +134,8 @@
 
 <div class="container">
     <div class="card card-container">
-        <img id="profile-img" class="profile-img-card" src="../../img/order.png"/>
+        <img id="profile-img" class="profile-img-card" src="../../img/order.png"
+             style="width: 55px; height: 70px;">
         <p id="profile-name" class="profile-name-card"></p>
 
 
@@ -139,21 +144,21 @@
 
             <c:choose>
                 <c:when test="${sessionScope.user.passportData eq null}">
-                    <label for="inputName">First name</label>
+                    <label for="inputLastName"><fmt:message key="field.lastName"/></label>
+                    <input class="form-control" id="inputLastName" type="text" pattern="([A-Z][a-z]+)" name="lastName" required>
+
+                    <label for="inputName"><fmt:message key="field.name"/> </label>
                     <input class="form-control" id="inputName" type="text" pattern="([A-Z][a-z]+)" name="name" required>
 
-                    <label for="inputMiddleName">Middle name</label>
+                    <label for="inputMiddleName"><fmt:message key="field.middleName"/></label>
                     <input class="form-control" id="inputMiddleName" type="text" pattern="([A-Z][a-z]+)" name="middleName"
                            required>
 
-                    <label for="inputLastName">Last name</label>
-                    <input class="form-control" id="inputLastName" type="text" pattern="([A-Z][a-z]+)" name="lastName" required>
-
-                    <label for="dateOfBirth">Date of birth</label>
+                    <label for="dateOfBirth"><fmt:message key="field.birthDate"/></label>
                     <input type="date" class="form-control"  id="dateOfBirth"
                            name="dateOfBirth" max="${requestScope.maxDateOfBirth}" required>
 
-                    <label for="inputPhone">Phone</label>
+                    <label for="inputPhone"><fmt:message key="field.phone"/></label>
                     <input class="form-control" type="text" id="inputPhone" name="phone"
                            placeholder="+38(0 _ _) _ _ _ _ _ _ _"
                            pattern="(\+380.{9})" required>
@@ -172,31 +177,29 @@
                     <input class="form-control" type="text" name="phone" readonly
                            value="${passport.phone}">
                     <div class="alert alert-info">
-                        <strong>Info!</strong> If you want to change your passport data, you can do it
-                        in your profile before making order.
+                        <strong><fmt:message key="info.info"/> </strong>
+                        <fmt:message key="info.changePassportDataMsg"/>
                     </div>
                 </c:otherwise>
             </c:choose>
 
             <hr>
-            <label>Rental dates (You can take your car at 8am and must return it at
-                the same time on the day selected in the field "to". The day of return won't be
-                included in the total price)</label><br>
+            <label><fmt:message key="info.rentalDatesMsg"/>)</label><br>
             <div style="display: inline-block">
-                <label for="start">From:</label>
+                <label for="start"><fmt:message key="info.cars.dateFrom"/></label>
                 <br>
                 <input class="form-control"  style="width: 80%" type="text" id="start" name="startDate" required>
             </div>
 
             <div style="display: inline-block">
-                <label for="end">To:</label>
+                <label for="end"><fmt:message key="info.cars.dateTo"/></label>
                 <br>
                 <input class="form-control" style="width: 80%" type="text" id="end" name="endDate" required>
             </div>
 
             <br><br>
             <div class="checkbox">
-            <label><input type="checkbox" name="driver"> Driver </label>
+            <label><input type="checkbox" name="driver"> <fmt:message key="info.cars.driver"/> </label>
             </div>
 
 
@@ -257,13 +260,13 @@
 
             <hr><br>
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="makeOrder">Make order
+                    name="action" value="makeOrder"><fmt:message key="button.makeOrder"/>
             </button>
         </form>
         <form action="order" class="form-signin" method="get">
             <input type="hidden" name="carId" value="${requestScope.carId}">
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="home">Main page
+                    name="action" value="home"><fmt:message key="button.mainPage"/>
             </button>
         </form>
 

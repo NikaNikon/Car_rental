@@ -1,18 +1,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 
+<fmt:setLocale value="${sessionScope.locale}"/>
+<fmt:setBundle basename="lang"/>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental</title>
+    <title><fmt:message key="info.pageTitle"/></title>
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
 
     <style>
 
 
         .card-container.card {
-            max-width: 400px;
+            max-width: 500px;
             min-height: 450px;
             padding: 40px 40px;
         }
@@ -134,20 +137,20 @@
             <c:choose>
                 <c:when test="${car ne null}">
 
-                    <label for="licensePlate"> License plate </label>
+                    <label for="licensePlate"> <fmt:message key="table.cars.licensePlate"/> </label>
                     <input type="text" class="form-control" required name="licensePlate" id="licensePlate"
                            pattern="([A-Z]{2}[0-9]{4}[A-Z]{2})" value="${car.licensePlate}">
 
-                    <label for="modell"> Model </label>
+                    <label for="modell"> <fmt:message key="table.cars.model"/> </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
                            required autofocus name="model" id="modell" value="${car.model}">
 
-                    <label for="fullNamee"> Full name </label>
+                    <label for="fullNamee"> <fmt:message key="table.cars.fullName"/> </label>
                     <input type="text" class="form-control" required name="fullName" id="fullNamee"
                            value="${car.fullName}">
 
 
-                    <label for="carClasss"> Class </label>
+                    <label for="carClasss"> <fmt:message key="table.cars.class"/> </label>
                     <select class="form-control" name="carClass" required id="carClasss">
                         <c:forEach items="${requestScope.classes}" var="curClass">
                             <c:choose>
@@ -162,26 +165,27 @@
                     </select>
 
                     <br>
-                    <label for="descriptionn"> Description </label>
+                    <label for="descriptionn"> <fmt:message key="table.cars.description"/> </label>
                     <textarea class="form-control" rows="6"
                               required name="description" id="descriptionn">${car.description}</textarea><br>
 
                     <table>
                         <tr>
                             <td>
-                                <label for="pricee"> Price </label>
+                                <label for="pricee"> <fmt:message key="table.cars.price"/> </label>
                                 <input type="number" class="form-control"
                                        required name="price" id="pricee" value="${car.price}">
                             </td>
                             <td>
-                                <label for="driverPricee"> Driver price </label>
+                                <label for="driverPricee">
+                                    <fmt:message key="table.cars.driverPrice"/> </label>
                                 <input type="number" class="form-control"
                                        required name="driverPrice" id="driverPricee" value="${car.driverPrice}">
                             </td>
                         </tr>
                     </table>
 
-                    <label for="status"> Status </label>
+                    <label for="status"> <fmt:message key="table.cars.status"/> </label>
                     <select class="form-control" name="status" required id="status">
                         <c:forEach items="${requestScope.statuses}" var="curStatus">
                             <c:choose>
@@ -199,24 +203,24 @@
                     <hr>
                     <br>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="update">Save
+                            name="action" value="update"><fmt:message key="button.save"/>
                     </button>
                 </c:when>
                 <c:otherwise>
 
-                    <label for="licensePlate"> License plate </label>
+                    <label for="licensePlate"> <fmt:message key="table.cars.licensePlate"/> </label>
                     <input type="text" class="form-control" required name="licensePlate" id="licensePlate"
-                           pattern="([A-Z]{2}[0-9]{4}[A-Z]{2})">
+                           autofocus pattern="([A-Z]{2}[0-9]{4}[A-Z]{2})">
 
-                    <label for="model"> Model </label>
+                    <label for="model"> <fmt:message key="table.cars.model"/> </label>
                     <input type="text" class="form-control" pattern="([A-Za-z\s*]+)"
-                           required autofocus name="model" id="model">
+                           required name="model" id="model">
 
-                    <label for="fullName"> Full name </label>
+                    <label for="fullName"> <fmt:message key="table.cars.fullName"/> </label>
                     <input type="text" class="form-control" required name="fullName" id="fullName">
 
 
-                    <label for="carClass"> Class </label>
+                    <label for="carClass"> <fmt:message key="table.cars.class"/> </label>
                     <select class="form-control" name="carClass" required id="carClass">
                         <c:forEach items="${requestScope.classes}" var="curClass">
                             <option value="${curClass.id}">${curClass.carClassName}</option>
@@ -224,18 +228,18 @@
                     </select>
 
                     <br>
-                    <label for="description"> Description </label>
+                    <label for="description"> <fmt:message key="table.cars.description"/> </label>
                     <textarea class="form-control" rows="6" required name="description"
                               id="description"> </textarea><br>
 
                     <table>
                         <tr>
                             <td>
-                                <label for="price"> Price </label>
+                                <label for="price"> <fmt:message key="table.cars.price"/> </label>
                                 <input type="number" class="form-control" required name="price" id="price">
                             </td>
                             <td>
-                                <label for="driverPrice"> Driver price </label>
+                                <label for="driverPrice"> <fmt:message key="table.cars.driverPrice"/> </label>
                                 <input type="number" class="form-control" required name="driverPrice" id="driverPrice">
                             </td>
                         </tr>
@@ -244,14 +248,14 @@
                     <hr>
                     <br>
                     <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                            name="action" value="save">Save
+                            name="action" value="save"><fmt:message key="button.save"/>
                     </button>
                 </c:otherwise>
             </c:choose>
         </form>
         <form action="carForm" method="post">
             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit"
-                    name="action" value="back">Back to cars
+                    name="action" value="back"><fmt:message key="button.back"/>
             </button>
         </form>
     </div>
