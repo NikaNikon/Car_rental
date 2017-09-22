@@ -29,7 +29,8 @@ public class AdminServlet extends HttpServlet {
                 break;
             }
             case "users": {
-                req.setAttribute("users", UsersServise.getCustomers());
+                /*req.setAttribute("users", UsersServise.getCustomers());*/
+                req.setAttribute("users", UsersServise.getUsersWithMoneySpent());
                 req.getRequestDispatcher("WEB-INF/pages/AdminUsers.jsp").forward(req, resp);
                 break;
             }

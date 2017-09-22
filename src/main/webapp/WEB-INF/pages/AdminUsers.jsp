@@ -170,6 +170,7 @@
                 <th style="white-space: pre;"><fmt:message key="table.user.role"/></th>
                 <th style="white-space: pre;"><fmt:message key="table.user.email"/></th>
                 <th style="white-space: pre;"><fmt:message key="table.user.status"/></th>
+                <th style="white-space: pre;"><fmt:message key="table.users.money"/></th>
                 <th></th>
             </tr>
             </thead>
@@ -177,11 +178,11 @@
             <c:forEach items="${requestScope.users}" var="current">
                 <tr>
                     <th><img src="../../img/user.png" style="width:80px; height:80px"></th>
-                    <td><c:out value="${current.login}"/></td>
-                    <td><c:out value="${current.role}"/></td>
-                    <td><c:out value="${current.email}"/></td>
+                    <td><c:out value="${current.key.login}"/></td>
+                    <td><c:out value="${current.key.role}"/></td>
+                    <td><c:out value="${current.key.email}"/></td>
                     <c:choose>
-                        <c:when test="${current.blocked eq true}">
+                        <c:when test="${current.key.blocked eq true}">
                             <td><fmt:message key="table.user.blocked"/></td>
                         </c:when>
                         <c:otherwise>
@@ -189,18 +190,20 @@
                         </c:otherwise>
                     </c:choose>
 
+                    <td><c:out value="${current.value}"/></td>
+
                     <td align="center">
                         <form action="adminUsers" method="post">
                             <c:choose>
-                                <c:when test="${current.blocked eq true}">
+                                <c:when test="${current.key.blocked eq true}">
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="userUnblock_${current.id}">
+                                            value="userUnblock_${current.key.id}">
                                         <fmt:message key="button.user.unblock"/>
                                     </button>
                                 </c:when>
                                 <c:otherwise>
                                     <button class="btn btn-success" type="submit" name="action"
-                                            value="userBlock_${current.id}">
+                                            value="userBlock_${current.key.id}">
                                         <fmt:message key="button.user.block"/>
                                     </button>
                                 </c:otherwise>

@@ -331,7 +331,9 @@
                             <option value="max-min">
                                 <fmt:message key="info.cars.sort.expensiveFirst"/></option>
                             <option value="alph">
-                                <fmt:message key="info.cars.sort.alphabetically"/></option>
+                                <fmt:message key="info.cars.sort.alphabeticallyAZ"/></option>
+                            <option value="alphBack">
+                                <fmt:message key="info.cars.sort.alphabeticallyZA"/></option>
                         </select>
                     </td>
                     <td>

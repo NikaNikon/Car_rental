@@ -15,7 +15,9 @@ import java.io.IOException;
 public class CarFormServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
 
         if (req.getAttribute("action") != null) {
             if (req.getAttribute("action").equals("edit")) {

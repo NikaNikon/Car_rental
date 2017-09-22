@@ -142,6 +142,15 @@ public class CarsService {
                 });
                 break;
             }
+            case "alphBack": {
+                Collections.sort(list, new Comparator<Car>() {
+                    @Override
+                    public int compare(Car o2, Car o1) {
+                        return o1.getFullName().compareToIgnoreCase(o2.getFullName());
+                    }
+                });
+                break;
+            }
         }
         return list;
     }
@@ -224,6 +233,14 @@ public class CarsService {
                     closeFactory(factory);
                     return false;
                 }
+            } catch (SQLException e) {
+                LOGGER.error("Cannot get car by id(" + car.getId() + ") from database: " + e);
+                throw new ApplicationException(e);
+            }
+        } else if (Car.Status.AVAILABLE.equals(newStatus)){
+            try {
+                Car carForUpdate = dao.getById(car.getId());
+                carForUpdate.setStatus(newStatus);
             } catch (SQLException e) {
                 LOGGER.error("Cannot get car by id(" + car.getId() + ") from database: " + e);
                 throw new ApplicationException(e);

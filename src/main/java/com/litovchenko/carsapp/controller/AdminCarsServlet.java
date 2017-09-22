@@ -1,6 +1,8 @@
 package com.litovchenko.carsapp.controller;
 
+import com.litovchenko.carsapp.model.User;
 import com.litovchenko.carsapp.service.CarsService;
+import com.litovchenko.carsapp.service.UsersServise;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +17,10 @@ public class AdminCarsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        if(req.getSession().getAttribute("user") != null){
+            req.getSession().setAttribute("user",
+                    UsersServise.refresh(((User)(req.getSession().getAttribute("user")))));
+        }
         if (req.getParameter("action") != null) {
             if (req.getParameter("action").startsWith("edit")) {
                 req.setAttribute("action", "edit");

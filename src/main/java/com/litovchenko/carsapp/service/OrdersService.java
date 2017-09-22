@@ -110,7 +110,7 @@ public class OrdersService {
         return true;
     }
 
-    public static boolean makeOrder(String firstName, String middleName, String lastName, Date birth,
+    /*public static boolean makeOrder(String firstName, String middleName, String lastName, Date birth,
                                     String phone, int userId, int carId, Date start, Date end, boolean driver) {
         if (!isOrderDataValid(firstName, middleName, lastName, birth, phone, start, end)) {
             return false;
@@ -152,7 +152,51 @@ public class OrdersService {
         }
         closeFactory(factory);
         return success;
+    }*/
+
+
+    public static Order makeOrder(String firstName, String middleName, String lastName, Date birth,
+                                    String phone, int userId, int carId, Date start, Date end, boolean driver) {
+        if (!isOrderDataValid(firstName, middleName, lastName, birth, phone, start, end)) {
+            return null;
+        }
+
+        java.sql.Date birthDate = new java.sql.Date(birth.getTime());
+        java.sql.Date startDate = new java.sql.Date(start.getTime());
+        java.sql.Date endDate = new java.sql.Date(end.getTime());
+        java.sql.Date orderDate = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+
+        DAOFactory factory = new MySqlDAOFactory();
+        OrderDAO dao = factory.getOrderDAO();
+        PassportDataDAO passportDao = factory.getPassportDataDAO();
+        boolean success = false;
+
+        Order order = new Order(0, userId, carId, startDate, endDate,
+                orderDate, driver, 0, 0);
+        try {
+            if (passportDao.getById(userId) != null) {
+                if (dao.insert(order)) {
+                    success = true;
+                }
+            } else {
+                PassportData passport = new PassportData(userId, firstName, middleName,
+                        lastName, birthDate, phone);
+                factory.startTransaction();
+                boolean isPassportDataInserted = passportDao.insert(passport);
+                boolean isOrderInserted = dao.insert(order);
+                if (isPassportDataInserted == false || isOrderInserted == false) {
+                    order = null;
+                    factory.abortTransaction();
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Cannot process data to make order: " + e);
+            throw new ApplicationException(e);
+        }
+        closeFactory(factory);
+        return order;
     }
+
 
     public static String getMaxDateOfBirth() {
         Date now = Calendar.getInstance().getTime();
@@ -296,6 +340,7 @@ public class OrdersService {
     }
 
     public static boolean closeOrder(int id) {
+
         return changeStatus(id, "CLOSED");
     }
 

@@ -130,11 +130,13 @@
 </head>
 <body>
 <header id="header">
+
     <div style="display: inline-block">
         <form action="MainPageServlet" method="get">
             <button class="btn-link"><fmt:message key="companyName"/></button>
         </form>
     </div>
+
 
     <div style="display: inline-block;" class="dropdown">
         <a data-toggle="dropdown" class="dropdown-toggle">

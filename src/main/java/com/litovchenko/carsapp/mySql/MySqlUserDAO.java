@@ -3,14 +3,16 @@ package com.litovchenko.carsapp.mySql;
 import com.litovchenko.carsapp.dao.UserDAO;
 import com.litovchenko.carsapp.model.Role;
 import com.litovchenko.carsapp.model.User;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.litovchenko.carsapp.model.Constants.*;
 
 public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
+
+    static final Logger LOGGER = Logger.getLogger(MySqlUserDAO.class);
 
     private static final String SQL_INSERT_QUERY;
     private static final String SQL_UPDATE_QUERY;
@@ -44,6 +46,7 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
         PreparedStatement pstm = con.prepareStatement(sql);
         pstm.setString(1, login);
         pstm.setString(2, password);
+        LOGGER.trace("Statement to get user from database by login and password: " + pstm.toString());
         ResultSet rs = pstm.executeQuery();
         List<User> list = parseResultSet(rs);
         if (list != null) {
@@ -160,10 +163,36 @@ public class MySqlUserDAO extends MySqlGenericDAO<User> implements UserDAO {
         pstm.setString(2, user.getLogin());
         pstm.setString(3, user.getPassword());
         pstm.setString(4, user.getEmail());
+        LOGGER.trace("Statement to insert new user in database with the specific role: " + pstm.toString());
         if (pstm.executeUpdate() == 1) {
             return true;
         }
         pstm.close();
         return false;
+    }
+
+    @Override
+    public Map<User, Double> getUsersWithMoneySpent() throws SQLException {
+        String sql = "select users.id, roleId, login, password, email, blocked, sum(orders.totalPrice)money " +
+                "from users, passport_data, orders where users.id = passport_data.userId and " +
+                "users.id = orders.userId group by users.id order by money desc";
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery(sql);
+        Map<User, Double> map = new LinkedHashMap<>();
+        while(rs.next()){
+            MySqlPassportDataDAO passportDataDAO = new MySqlPassportDataDAO(con);
+            MySqlRoleDAO roleDAO = new MySqlRoleDAO(con);
+            User user = new User(rs.getInt(ID), rs.getInt(USER_ROLE_ID), rs.getString(LOGIN),
+                    rs.getString(PASSWORD), rs.getString(EMAIL), rs.getBoolean(BLOCKED));
+            user.setPassportData(passportDataDAO.getById(rs.getInt(ID)));
+            Role role = roleDAO.getById(rs.getInt(USER_ROLE_ID));
+            if (role != null) {
+                user.setRole(role.getRoleName());
+            }
+            map.put(user, rs.getDouble("money"));
+        }if(map.isEmpty()){
+            map = null;
+        }
+        return map;
     }
 }

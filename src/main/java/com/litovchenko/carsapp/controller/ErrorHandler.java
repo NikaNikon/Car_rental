@@ -16,14 +16,15 @@ public class ErrorHandler extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Throwable t = (Throwable)req.getAttribute("javax.servlet.error.exception");
-        if(t == null){
-            resp.sendRedirect("ErrPage.jsp");
-        }
-        if(t.getClass().equals(UserInputException.class)){
-            resp.sendRedirect("InputErrPage.jsp");
-        } else if (t.getClass().equals(ApplicationException.class)){
-            resp.sendRedirect("AppErrPage.jsp");
-        } else {
+        try {
+            if (t.getClass().equals(UserInputException.class)) {
+                resp.sendRedirect("InputErrPage.jsp");
+            } else if (t.getClass().equals(ApplicationException.class)) {
+                resp.sendRedirect("AppErrPage.jsp");
+            } else {
+                resp.sendRedirect("ErrPage.jsp");
+            }
+        } catch (NullPointerException ex){
             resp.sendRedirect("ErrPage.jsp");
         }
 

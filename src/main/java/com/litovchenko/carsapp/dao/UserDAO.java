@@ -4,6 +4,7 @@ import com.litovchenko.carsapp.model.User;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface UserDAO extends GenericDAO<User>{
 
@@ -20,5 +21,7 @@ public interface UserDAO extends GenericDAO<User>{
     boolean updateBlockedStatus(boolean isBlocked, int id) throws SQLException;
 
     boolean insertWithRole(User user) throws SQLException;
+
+    Map<User, Double> getUsersWithMoneySpent() throws SQLException;
 
 }

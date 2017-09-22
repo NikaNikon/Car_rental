@@ -25,9 +25,10 @@ public class AdminUsersServlet extends HttpServlet {
                 req.setAttribute("users", UsersServise.getCustomers());
                 req.getRequestDispatcher("WEB-INF/pages/AdminUsers.jsp").forward(req, resp);
             }
+        } else {
+            req.setAttribute("managers", UsersServise.getManagers());
+            req.getRequestDispatcher("WEB-INF/pages/AdminManagers.jsp").forward(req, resp);
         }
-        req.setAttribute("managers", UsersServise.getManagers());
-        req.getRequestDispatcher("WEB-INF/pages/AdminManagers.jsp").forward(req, resp);
     }
 
     @Override

@@ -23,6 +23,11 @@ public class MainPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        if(req.getSession().getAttribute("user") != null){
+            req.getSession().setAttribute("user",
+                    UsersServise.refresh(((User)(req.getSession().getAttribute("user")))));
+        }
+
         List<Car> list;
         if (req.getSession().getAttribute("cars") != null) {
             list = (List<Car>) req.getSession().getAttribute("cars");

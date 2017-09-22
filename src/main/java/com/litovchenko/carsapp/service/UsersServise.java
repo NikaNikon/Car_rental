@@ -7,7 +7,10 @@ import com.litovchenko.carsapp.mySql.MySqlDAOFactory;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class UsersServise {
 
@@ -136,6 +139,32 @@ public class UsersServise {
         }
         closeDaoFactory(factory);
         return user;
+    }
+
+    public static User refresh(User user){
+        DAOFactory factory = new MySqlDAOFactory();
+        UserDAO dao = factory.getUserDAO();
+        try {
+            return dao.getById(user.getId());
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get user by id(" + user.getId() + ") from database: " + e);
+            throw new ApplicationException(e);
+        }
+    }
+
+    public static Map<User, Double> getUsersWithMoneySpent(){
+        DAOFactory factory = new MySqlDAOFactory();
+        UserDAO dao = factory.getUserDAO();
+        Map<User, Double> map;
+        try {
+            map = dao.getUsersWithMoneySpent();
+        } catch (SQLException e) {
+            LOGGER.error("Cannot get users with money spent from database: " + e);
+            throw new ApplicationException(e);
+        }
+
+        closeDaoFactory(factory);
+        return map;
     }
 
 }

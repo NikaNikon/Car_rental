@@ -2,6 +2,7 @@ package com.litovchenko.carsapp.mySql;
 
 import com.litovchenko.carsapp.dao.GenericDAO;
 import com.litovchenko.carsapp.model.Identified;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,8 @@ import java.util.List;
 public abstract class MySqlGenericDAO<T extends Identified> implements GenericDAO<T> {
 
     protected Connection con;
+
+    static final Logger LOGGER = Logger.getLogger(MySqlGenericDAO.class);
 
     protected abstract String getInsertQuery();
 
@@ -60,6 +63,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
         PreparedStatement pstm = con.prepareStatement(getInsertQuery(),
                 PreparedStatement.RETURN_GENERATED_KEYS);
         prepareStatementForInsert(pstm, object);
+        LOGGER.trace("Statement to insert the car in database: " + pstm.toString());
         pstm.executeUpdate();
         ResultSet rs = pstm.getGeneratedKeys();
         if (rs.next()) {
@@ -74,6 +78,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
     public boolean update(T object) throws SQLException {
         PreparedStatement pstm = con.prepareStatement(getUpdateQuery());
         prepareStatementForUpdate(pstm, object);
+        LOGGER.trace("Statement to update car in database: " + pstm.toString());
         if (pstm.executeUpdate() > 0) {
             return true;
         }
@@ -85,6 +90,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
     public boolean deleteById(int id) throws SQLException {
         PreparedStatement pstm = con.prepareStatement(getDeleteQuery());
         pstm.setInt(1, id);
+        LOGGER.trace("Statement to delete car in database: " + pstm.toString());
         if (pstm.executeUpdate() == 1) {
             return true;
         }
@@ -106,6 +112,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
         List<T> list;
         PreparedStatement pstm = con.prepareStatement(sql);
         pstm.setString(1, value);
+        LOGGER.trace("Statement to get car from database by parameter: " + pstm.toString());
         ResultSet rs = pstm.executeQuery();
         list = parseResultSet(rs);
         pstm.close();
@@ -116,6 +123,7 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
         List<T> list;
         PreparedStatement pstm = con.prepareStatement(sql);
         pstm.setInt(1, value);
+        LOGGER.trace("Statement to get car from database by parameter: " + pstm.toString());
         ResultSet rs = pstm.executeQuery();
         list = parseResultSet(rs);
         pstm.close();
