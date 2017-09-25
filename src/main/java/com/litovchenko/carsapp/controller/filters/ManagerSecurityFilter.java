@@ -19,7 +19,7 @@ public class ManagerSecurityFilter implements Filter {
         HttpSession session = request.getSession();
         String role = ((User)(session.getAttribute("user"))).getRole();
         if(!"MANAGER".equals(role)){
-            servletRequest.getRequestDispatcher("/MainPageServlet").
+            servletRequest.getRequestDispatcher("ErrPage.jsp").
                     forward(servletRequest, servletResponse);
             return;
         }

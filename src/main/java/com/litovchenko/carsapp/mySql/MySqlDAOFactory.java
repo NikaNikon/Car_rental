@@ -19,8 +19,6 @@ public class MySqlDAOFactory extends DAOFactory {
     private static DataSource dataSource;
     private Connection connection;
 
-    static int count = 0;
-
     static {
         try {
             Context initContext = new InitialContext();

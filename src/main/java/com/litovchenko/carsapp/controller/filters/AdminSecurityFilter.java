@@ -16,7 +16,7 @@ public class AdminSecurityFilter implements Filter {
         HttpSession session = request.getSession();
         String role = ((User)(session.getAttribute("user"))).getRole();
         if(!"ADMIN".equals(role)){
-            req.getRequestDispatcher("/MainPageServlet").forward(req, resp);
+            req.getRequestDispatcher("ErrPage.jsp").forward(req, resp);
             return;
         }
         chain.doFilter(req, resp);

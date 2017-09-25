@@ -32,7 +32,6 @@ public abstract class MySqlGenericDAO<T extends Identified> implements GenericDA
 
     protected abstract void prepareStatementForUpdate(PreparedStatement st, T object) throws SQLException;
 
-    protected static final String line_sep = System.lineSeparator();
 
     protected static final String EQ_PARAM = " = ?";
 
